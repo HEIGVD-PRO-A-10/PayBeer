@@ -11,6 +11,7 @@ Installation de Docker et docker-compose :
 ```bash
 sudo pacman -S docker docker-compose
 sudo gpasswd -a $USER docker
+sudo systemctl enable --now docker
 ```
 
 **Ubuntu**
@@ -30,3 +31,8 @@ Lancement des conteneurs :
 ```bash
 docker-compose up -d
 ```
+
+Accéder à l'application :
+- Symfony: [http://localhost:8000](http://localhost:8000)
+- phpMyAdmin: [http://localhost:8080](http://localhost:8080)
+- MailHog: [http://localhost:8025](http://localhost:8025)
