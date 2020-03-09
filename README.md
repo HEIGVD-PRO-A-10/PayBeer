@@ -18,6 +18,7 @@ sudo gpasswd -a $USER docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sh get-docker.sh
 sudo usermod -aG docker $USER
+sudo apt-get install docker-compose
 ```
 
 Récupération du projet :
