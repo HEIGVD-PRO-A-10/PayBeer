@@ -1,5 +1,21 @@
 version: "3.7"
 services:
+  db:
+    image: mariadb:latest
+    volumes:
+    - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: symfony
+  php:
+    build:
+      context: .
+    volumes:
+        - .:/var/www:cached
+    depends_on:
+      - db
   web:
     image: nginx:latest
     ports:
@@ -10,20 +26,6 @@ services:
       - ./logs/nginx:/var/log/nginx
     depends_on:
       - php
-  php:
-    build:
-      context: .
-    volumes:
-      - .:/var/www:cached
-    depends_on:
-      - db
-  db:
-    image: mariadb:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: symfony
-      MYSQL_USER: symfony
-      MYSQL_PASSWORD: symfony
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
@@ -38,3 +40,5 @@ services:
     image: mailhog/mailhog
     ports:
     - 8025:8025
+volumes:
+  db-data:
