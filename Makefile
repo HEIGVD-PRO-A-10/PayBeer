@@ -18,6 +18,6 @@ up: ## Lance les conteneurs
 stop: ## Stop les conteneurs
 	$(dc) stop
 
-.PHONY: down
-down: ## Stop et supprime les conteneurs
+.PHONY: clean
+clean: ## Stop et supprime les conteneurs
 	$(dc) down
