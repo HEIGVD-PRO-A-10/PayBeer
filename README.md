@@ -33,7 +33,7 @@ Lancement des conteneurs :
 docker-compose up -d
 ```
 
-Installation des dépendances
+Installation des dépendances :
 ```
 docker-compose exec php composer install
 ```
