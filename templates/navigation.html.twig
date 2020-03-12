@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        <h1>NAVIGATION page: {{ curr_page }}</h1>
+        <br>
+        {% for page in pages %}
+
+            {% if page.name == curr_page %}
+                <h1 id="page_{{ page.name }}">>> {{ page.desc }} <<</h1>
+            {% else %}
+                <h1 id="page_{{ page.name }}"> {{ page.desc }} </h1>
+            {% endif %}
+
+        {% endfor %}
+    </body>
+</html>
