@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Welcome to Symfony!</title>
+    </head>
+    <body>
+    {{ render(controller(
+        'App\\Controller\\NavController::showNav', {currentPage: route_name}
+    )) }}
+    </body>
+</html>

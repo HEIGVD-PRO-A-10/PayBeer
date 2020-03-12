@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class EditController extends AbstractController {
+class EditUserController extends AbstractController {
 
     /**
      * @Route("/edit/{userID}", name="edit_user")
@@ -15,5 +15,8 @@ class EditController extends AbstractController {
     public function editUser($userID) {
 
         //TODO: check id exist
+
+        $data =  array('route_name' => 'edit_user', "color" => "red");
+        return $this->render('editUser.html.twig', $data);
     }
 }

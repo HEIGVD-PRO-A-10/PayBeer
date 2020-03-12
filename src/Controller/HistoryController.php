@@ -7,13 +7,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class History extends AbstractController {
+class HistoryController extends AbstractController {
 
     /**
      * @Route("/history", name="history")
      */
-    public function listUsers() {
+    public function history() {
 
+
+        $data =  array('route_name' => 'history', "color" => "red");
+        return $this->render('history.html.twig', $data);
     }
 
 }
