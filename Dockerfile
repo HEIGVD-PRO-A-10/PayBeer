@@ -19,6 +19,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ 
 RUN wget https://get.symfony.com/cli/installer -O - | bash && \
   mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
+
+ARG USER_ID
+ARG GROUP_ID
+
+RUN groupadd -f --gid $GROUP_ID user
+RUN useradd -m -s /bin/bash --uid $USER_ID --gid $GROUP_ID user
+USER user
+
 WORKDIR /var/www
 
 EXPOSE 9000
