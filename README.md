@@ -30,12 +30,12 @@ cd PayBeer
 
 Lancement des conteneurs :
 ```
-docker-compose up -d
+make up
 ```
 
 Installation des dépendances :
 ```
-docker-compose exec php composer install
+make dep
 ```
 
 Accéder aux applications :
@@ -45,3 +45,9 @@ Accéder aux applications :
 | Symfony     | [http://localhost:8000](http://localhost:8000) |
 | phpMyAdmin  | [http://localhost:8080](http://localhost:8080) |
 | MailHog     | [http://localhost:8025](http://localhost:8025) |
+
+Stop les conteneurs :
+```
+make stop
+make clean # Optionnel, supprime les conteneurs
+```

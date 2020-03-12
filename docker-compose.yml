@@ -17,6 +17,7 @@ services:
         GROUP_ID: ${GROUP_ID}
     volumes:
         - .:/var/www:cached
+        - ./docker/php/symfony.ini:/usr/local/etc/php/conf.d/symfony.ini:cached
     depends_on:
       - db
   web:

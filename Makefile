@@ -14,6 +14,14 @@ help: ## Affiche cette aide
 up: ## Lance les conteneurs
 	$(dc) up -d
 
+.PHONY: build
+build: ## Lance les conteneurs
+	$(dc) build
+
+.PHONY: dep
+dep: ## Install les dépendances PHP
+	$(de) php composer install
+
 .PHONY: stop
 stop: ## Stop les conteneurs
 	$(dc) stop

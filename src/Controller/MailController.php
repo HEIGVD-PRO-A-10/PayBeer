@@ -3,11 +3,14 @@
 
 namespace App\Controller;
 
+use Exception;
+use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MailController extends AbstractController
@@ -16,18 +19,26 @@ class MailController extends AbstractController
     /**
      * @Route("/mail")
      * @param MailerInterface $mailer
+     * @param LoggerInterface $logger
+     * @return Response
+     * @throws Exception
      */
-    public function mail(MailerInterface $mailer) {
-        $email = (new Email())
+    public function mail(MailerInterface $mailer, LoggerInterface $logger) {
+        $email = (new TemplatedEmail())
             ->from(Address::fromString('Gil Balsiger <gil.balsiger@heig-vd.ch>'))
-            ->to('albert@bluewin.ch')
+            ->to(Address::fromString('Julien Béguin <julien.beguin@heig-vd.ch>'))
             ->subject('Email de test')
-            ->text('This is a text message')
-            ->html('<p>This is an <b>HTML</b> <em>message</em></p>');
+            ->htmlTemplate('email.html.twig')
+            ->context([
+                'expiration_date' => new \DateTime('+7 days'),
+                'username' => 'jul0105',
+            ])
+            ->text('This is a text message');
 
         try {
             $mailer->send($email);
-            dd('Email sent successfully');
+            $logger->info('Email sent successfully!');
+            return new Response('<body><h1>Email sent successfully!</h1></body>');
         } catch (TransportExceptionInterface $e) {
             dd($e->getMessage());
         }
