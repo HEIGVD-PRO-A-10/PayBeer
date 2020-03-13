@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+    {% block page %}
+    {% endblock %}
+
+    {% block footer %}
+        <div class="col-12 footer-tab row">
+            <div class="col-4">
+                <a href="{{ path('list_user') }}"><h3 class="{% if current_page == 'list_user' %} active {% endif %}">Lister utilisateur</h3></a>
+            </div>
+            <div class="col-4">
+                <a href="{{ path('history') }}"><h3 class="{% if current_page == 'history' %} active {% endif %}">Historique</h3></a>
+            </div>
+            <div class="col-4">
+                <a href="{{ path('add_user') }}"><h3 class="{% if current_page == 'add_user' %} active {% endif %}">Ajouter utilisateur</h3></a>
+            </div>
+        </div>
+    {% endblock %}
+
+{% endblock %}

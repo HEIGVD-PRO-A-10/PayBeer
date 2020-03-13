@@ -13,8 +13,7 @@ class AddUserController extends AbstractController {
      * @Route("/add", name="add_user")
      */
     public function addUser() {
-
-        $data =  array('route_name' => 'add_user', "color" => "red");
+        $data =  array('current_page' => 'add_user', "color" => "red");
         return $this->render('addUser.html.twig', $data);
     }
 }

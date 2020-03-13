@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Welcome to Symfony!</title>
-    </head>
-    <body>
-    {{ render(controller(
-        'App\\Controller\\NavController::showNav', {currentPage: route_name}
-    )) }}
-    </body>
-</html>
+{% extends "content.html.twig" %}
+
+{% block page %}
+    <div class="col-12 page-content">
+
+    </div>
+{% endblock %}

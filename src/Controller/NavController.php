@@ -29,7 +29,7 @@ class NavController extends AbstractController {
         );
 
         $data =  array(
-            'curr_page' => $currentPage,
+            'current_page' => $currentPage,
             'pages' => $pages
         );
 

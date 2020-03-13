@@ -1,0 +1,13 @@
+body, html {
+    height: 100%;
+}
+
+.page-content{
+    display: block;
+    height: 90%;
+}
+
+.footer-tab{
+
+    height: 10%;
+}

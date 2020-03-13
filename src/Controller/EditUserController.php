@@ -16,7 +16,7 @@ class EditUserController extends AbstractController {
 
         //TODO: check id exist
 
-        $data =  array('route_name' => 'edit_user', "color" => "red");
+        $data =  array('current_page' => 'edit_user', "color" => "red");
         return $this->render('editUser.html.twig', $data);
     }
 }

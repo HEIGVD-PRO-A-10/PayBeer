@@ -15,7 +15,7 @@ class HomeController extends AbstractController {
     public function home() {
 
 
-        $data =  array('route_name' => 'home', "color" => "red");
+        $data =  array('current_page' => 'home', "color" => "red");
         return $this->render('home.html.twig', $data);
     }
 }
