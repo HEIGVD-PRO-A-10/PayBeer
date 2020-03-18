@@ -3,11 +3,39 @@ body, html {
 }
 
 .page-content{
-    display: block;
     height: 90%;
 }
 
 .footer-tab{
 
     height: 10%;
+    text-align: center;
+}
+
+.tab-item{
+
+    text-align: center;
+}
+
+.tab-icon {
+    width: 50px;
+}
+
+
+/*Change text to icon responsively*/
+@media (min-width: 641px) {
+    .tab-icon {
+        display: none;
+    }
+    .tab-text {
+        display: inline-block;
+    }
+}
+@media (max-width: 640px) {
+    .tab-icon {
+        display: inline-block;
+    }
+    .tab-text {
+        display: none;
+    }
 }

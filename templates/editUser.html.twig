@@ -1,1 +1,5 @@
 {% extends "content.html.twig" %}
+
+{% block page %}
+    {% include 'formUser.html.twig' with { 'isEdit' : '1' } %}
+{% endblock %}

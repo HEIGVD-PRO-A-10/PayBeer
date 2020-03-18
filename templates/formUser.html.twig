@@ -1,0 +1,33 @@
+
+
+<h1>{% if isEdit %} Modifier {% else %} Ajouter {% endif %}</h1>
+
+<form>
+
+    <div class="form-group">
+        <label for="inputName">Nom</label>
+        <input type="text" class="form-control" id="inputName" placeholder="Nom" value="{% if isEdit %}{{ name }}{% endif %}">
+    </div>
+
+    <div class="form-group">
+        <label for="inputFirstname">Prénom</label>
+        <input type="text" class="form-control" id="inputFirstname" placeholder="Prénom" value="{% if isEdit %}{{ firstname }}{% endif %}">
+    </div>
+
+    {% if isEdit %}
+
+        <div class="form-group">
+            <label for="inputAmount">Montant du compte</label>
+            <input type="number" class="form-control" id="inputAmount" placeholder="Montant du compte" value="{% if isEdit %}{{ amount }}{% endif %}">
+        </div>
+
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="statusCheck" {% if active %} checked {% endif %}>
+            <label class="form-check-label" for="exampleCheck1">Utilisateur actif</label>
+        </div>
+
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">{% if isEdit %} Modifier {% else %} Ajouter {% endif %}</button>
+
+</form>

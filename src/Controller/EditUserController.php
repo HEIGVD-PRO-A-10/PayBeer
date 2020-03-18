@@ -16,7 +16,14 @@ class EditUserController extends AbstractController {
 
         //TODO: check id exist
 
-        $data =  array('current_page' => 'edit_user', "color" => "red");
+        $data =  array(
+            'current_page' => 'edit_user',
+            'id' => $userID,
+            'name' => 'Rieder',
+            'firstname' => 'Thomas',
+            'amount' => 1000,
+            'active' => 1
+        );
         return $this->render('editUser.html.twig', $data);
     }
 }
