@@ -2,7 +2,11 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Admin;
+use App\Entity\Transaction;
 use App\Entity\User;
+use DateTime;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,15 +39,86 @@ class ApiController extends AbstractController
     /**
      * @Route("/debit", name="debit")
      */
-    public function debit(): Response {
+    public function debit(Request $request): Response {
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository(User::class);
 
+        $tagRfid = $request->query->get('tag_rfid');
+        $amount = $request->query->get('amount');
+
+        $admin = $this->getDoctrine()->getRepository(Admin::class)->find(7);
+
+        if(!empty($tagRfid) && !empty($amount) && is_numeric($amount)) {
+            $user = $repository->findOneBy(['tag_rfid' => $tagRfid]);
+            if($user) {
+                $transaction = new Transaction();
+                $transaction->setAmount(-$amount);
+                $transaction->setDate(new DateTime('now'));
+                $transaction->setNumTerminal(1);
+                $transaction->setUser($user);
+                $transaction->setAdmin($admin);
+
+                $entityManager->persist($transaction);
+                $entityManager->flush();
+
+                $response = new JsonResponse(['status' => 'success', 'message' => "Transaction effctuée avec succès"]);
+                $response->setStatusCode(Response::HTTP_CREATED);
+                return $response;
+            } else {
+                // User not found
+                $response = new JsonResponse(['status' => 'error', 'message' => "L'utilisateur avec le tag RFID $tagRfid est introuvable"]);
+                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                return $response;
+            }
+        } else {
+            $response = new JsonResponse(['status' => 'error', 'message' => "Paramètres incorrectes"]);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $response;
+        }
     }
 
     /**
      * @Route("/credit", name="credit")
+     * @param Request $request
+     * @return Response
+     * @throws Exception
      */
-    public function credit(): Response {
+    public function credit(Request $request): Response {
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository(User::class);
 
+        $tagRfid = $request->query->get('tag_rfid');
+        $amount = $request->query->get('amount');
+
+        $admin = $this->getDoctrine()->getRepository(Admin::class)->find(7);
+
+        if(!empty($tagRfid) && !empty($amount) && is_numeric($amount)) {
+            $user = $repository->findOneBy(['tag_rfid' => $tagRfid]);
+            if($user) {
+                $transaction = new Transaction();
+                $transaction->setAmount($amount);
+                $transaction->setDate(new DateTime('now'));
+                $transaction->setNumTerminal(1);
+                $transaction->setUser($user);
+                $transaction->setAdmin($admin);
+
+                $entityManager->persist($transaction);
+                $entityManager->flush();
+
+                $response = new JsonResponse(['status' => 'success', 'message' => "Transaction effctuée avec succès"]);
+                $response->setStatusCode(Response::HTTP_CREATED);
+                return $response;
+            } else {
+                // User not found
+                $response = new JsonResponse(['status' => 'error', 'message' => "L'utilisateur avec le tag RFID $tagRfid est introuvable"]);
+                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                return $response;
+            }
+        } else {
+            $response = new JsonResponse(['status' => 'error', 'message' => "Paramètres incorrectes"]);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $response;
+        }
     }
 
     /**
