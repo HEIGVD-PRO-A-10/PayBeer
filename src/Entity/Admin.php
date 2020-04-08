@@ -6,13 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AdminRepository")
  * @UniqueEntity("email")
  */
-class Admin
+class Admin implements UserInterface
 {
     /**
      * @ORM\Column(type="string", length=255, unique=true)
@@ -153,5 +154,32 @@ class Admin
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoles() {
+        return ['ROLE_ADMIN'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalt() {
+        // Pas nécessaire avec bcrypt
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUsername():string {
+        return $this->email;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials() {
     }
 }

@@ -2,17 +2,13 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Admin;
-use App\Entity\Transaction;
 use App\Entity\User;
-use DateTime;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Json;
 
 /**
  * Class ApiController
@@ -22,6 +18,7 @@ use Symfony\Component\Validator\Constraints\Json;
  */
 class ApiController extends AbstractController
 {
+
     /**
      * @Route("/", name="index")
      */
@@ -38,41 +35,15 @@ class ApiController extends AbstractController
 
     /**
      * @Route("/debit", name="debit")
+     * @param Request $request
+     * @return Response
      */
     public function debit(Request $request): Response {
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository(User::class);
-
-        $tagRfid = $request->query->get('tag_rfid');
-        $amount = $request->query->get('amount');
-
-        $admin = $this->getDoctrine()->getRepository(Admin::class)->find(7);
-
-        if(!empty($tagRfid) && !empty($amount) && is_numeric($amount)) {
-            $user = $repository->findOneBy(['tag_rfid' => $tagRfid]);
-            if($user) {
-                $transaction = new Transaction();
-                $transaction->setAmount(-$amount);
-                $transaction->setDate(new DateTime('now'));
-                $transaction->setNumTerminal(1);
-                $transaction->setUser($user);
-                $transaction->setAdmin($admin);
-
-                $entityManager->persist($transaction);
-                $entityManager->flush();
-
-                $response = new JsonResponse(['status' => 'success', 'message' => "Transaction effctuée avec succès"]);
-                $response->setStatusCode(Response::HTTP_CREATED);
-                return $response;
-            } else {
-                // User not found
-                $response = new JsonResponse(['status' => 'error', 'message' => "L'utilisateur avec le tag RFID $tagRfid est introuvable"]);
-                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-                return $response;
-            }
+        if ($this->authorize($request)) {
+            return $this->doTransaction($request, TransactionType::DEBIT);
         } else {
-            $response = new JsonResponse(['status' => 'error', 'message' => "Paramètres incorrectes"]);
-            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            $response = new JsonResponse(['status' => 'error', 'message' => "Accès non-autorisé"]);
+            $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
             return $response;
         }
     }
@@ -84,19 +55,83 @@ class ApiController extends AbstractController
      * @throws Exception
      */
     public function credit(Request $request): Response {
+        if ($this->authorize($request)) {
+            return $this->doTransaction($request, TransactionType::CREDIT);
+        } else {
+            $response = new JsonResponse(['status' => 'error', 'message' => "Accès non-autorisé"]);
+            $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
+            return $response;
+        }
+    }
+
+    /**
+     * @Route("/new-user", name="new_user", methods={"GET"})
+     * @param Request $request
+     * @return Response
+     */
+    public function newUser(Request $request): Response {
+        if ($this->authorize($request)) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $repository = $this->getDoctrine()->getRepository(User::class);
+
+            $firstname = $request->query->get('firstname');
+            $lastname = $request->query->get('lastname');
+            $tagRfid = $request->query->get('tag_rfid');
+
+            if (!empty($firstname) && !empty($lastname) && !empty($tagRfid)) {
+                $existingUser = $repository->findOneBy(['tag_rfid' => $tagRfid]);
+                if (!$existingUser) {
+                    $user = new User();
+                    $user
+                        ->setFirstname($firstname)
+                        ->setLastname($lastname)
+                        ->setTagRfid($tagRfid)
+                        ->setStatus('new');
+
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+
+                    $response = new JsonResponse(['status' => 'success', 'message' => "$firstname $lastname a bien été enregistré avec le tag RFID $tagRfid"]);
+                    $response->setStatusCode(Response::HTTP_CREATED);
+                    return $response;
+                } else {
+                    $response = new JsonResponse(['status' => 'error', 'message' => "Le tag RFID est déjà utilisé"]);
+                    $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                    return $response;
+                }
+            } else {
+                $response = new JsonResponse(['status' => 'error', 'message' => "Paramètres incorrectes"]);
+                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                return $response;
+            }
+        } else {
+            $response = new JsonResponse(['status' => 'error', 'message' => "Accès non-autorisé"]);
+            $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
+            return $response;
+        }
+    }
+
+    private function authorize(Request $request): bool {
+        return false;
+    }
+
+    private function doTransaction(Request $request, int $type): Response {
         $entityManager = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository(User::class);
 
         $tagRfid = $request->query->get('tag_rfid');
         $amount = $request->query->get('amount');
 
-        $admin = $this->getDoctrine()->getRepository(Admin::class)->find(7);
+        $admin = $this->getDoctrine()->getRepository(Admin::class)->findAll()[0];
 
-        if(!empty($tagRfid) && !empty($amount) && is_numeric($amount)) {
+        if (!empty($tagRfid) && !empty($amount) && is_numeric($amount)) {
             $user = $repository->findOneBy(['tag_rfid' => $tagRfid]);
-            if($user) {
+            if ($user) {
                 $transaction = new Transaction();
-                $transaction->setAmount($amount);
+                if ($type === TransactionType::DEBIT)
+                    $transaction->setAmount(-$amount);
+                else if ($type === TransactionType::CREDIT)
+                    $transaction->setAmount($amount);
                 $transaction->setDate(new DateTime('now'));
                 $transaction->setNumTerminal(1);
                 $transaction->setUser($user);
@@ -111,47 +146,6 @@ class ApiController extends AbstractController
             } else {
                 // User not found
                 $response = new JsonResponse(['status' => 'error', 'message' => "L'utilisateur avec le tag RFID $tagRfid est introuvable"]);
-                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-                return $response;
-            }
-        } else {
-            $response = new JsonResponse(['status' => 'error', 'message' => "Paramètres incorrectes"]);
-            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-            return $response;
-        }
-    }
-
-    /**
-     * @Route("/new-user", name="new_user", methods={"GET"})
-     * @param Request $request
-     * @return Response
-     */
-    public function newUser(Request $request): Response {
-        $entityManager = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository(User::class);
-
-        $firstname = $request->query->get('firstname');
-        $lastname = $request->query->get('lastname');
-        $tagRfid = $request->query->get('tag_rfid');
-
-        if (!empty($firstname) && !empty($lastname) && !empty($tagRfid)) {
-            $existingUser = $repository->findOneBy(['tag_rfid' => $tagRfid]);
-            if (!$existingUser) {
-                $user = new User();
-                $user
-                    ->setFirstname($firstname)
-                    ->setLastname($lastname)
-                    ->setTagRfid($tagRfid)
-                    ->setStatus('new');
-
-                $entityManager->persist($user);
-                $entityManager->flush();
-
-                $response = new JsonResponse(['status' => 'success', 'message' => "$firstname $lastname a bien été enregistré avec le tag RFID $tagRfid"]);
-                $response->setStatusCode(Response::HTTP_CREATED);
-                return $response;
-            } else {
-                $response = new JsonResponse(['status' => 'error', 'message' => "Le tag RFID est déjà utilisé"]);
                 $response->setStatusCode(Response::HTTP_BAD_REQUEST);
                 return $response;
             }
