@@ -2,8 +2,16 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Admin;
+use App\Entity\Transaction;
 use App\Entity\User;
+use DateTime;
 use Exception;
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\ValidationData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +38,14 @@ class ApiController extends AbstractController
      * @Route("/login", name="login")
      */
     public function login(): Response {
-        return new Response("This is login");
+        $time = time();
+        $signer = new Sha256();
+        $token = (new Builder())->issuedBy('http://localhost:8000/api/login')
+        ->permittedFor('http://localhost:8000/api')
+        ->issuedAt($time)
+        ->expiresAt($time + 3600)
+        ->getToken($signer, new Key('test'));
+        return new JsonResponse(['token' => (string)$token]);
     }
 
     /**
@@ -112,7 +127,19 @@ class ApiController extends AbstractController
     }
 
     private function authorize(Request $request): bool {
-        return false;
+        $signer = new Sha256();
+        $token = $request->headers->get('Authorization');
+        $token = explode(' ', $token)[1];
+        $token = (new Parser())->parse((string) $token);
+        // TODO: Changer la clé secrète 'test'
+        if ($token->verify($signer, 'test') && $token->hasClaim('exp') && $token->hasClaim('iss') && $token->hasClaim('aud')) {
+            $data = new ValidationData();
+            $data->setIssuer('http://localhost:8000/api/login');
+            $data->setAudience('http://localhost:8000/api');
+            return $token->validate($data);
+        } else {
+            return false;
+        }
     }
 
     private function doTransaction(Request $request, int $type): Response {
