@@ -1,0 +1,20 @@
+<div class="col-12 footer-tab row">
+    <div class="tab-item col-4">
+        <a href="{{ path('list_user') }}">
+            <h3 class="tab-text {% if current_page == 'list_user' %} active {% endif %}">Lister utilisateur</h3>
+            <img src="{{ asset("icon/list-ul-solid.svg") }}" class="icon tab-icon {% if current_page == 'list_user' %} tab-active {% endif %}">
+        </a>
+    </div>
+    <div class="tab-item col-4">
+        <a href="{{ path('history') }}">
+            <h3 class="tab-text {% if current_page == 'history' %} active {% endif %}">Historique</h3>
+            <img src="{{ asset("icon/exchange-alt-solid.svg") }}" class="icon tab-icon {% if current_page == 'history' %} tab-active {% endif %}">
+        </a>
+    </div>
+    <div class="tab-item col-4">
+        <a href="{{ path('add_user') }}">
+            <h3 class="tab-text {% if current_page == 'add_user' %} active {% endif %}">Ajouter utilisateur</h3>
+            <img src="{{ asset("icon/user-plus-solid.svg") }}" class="icon tab-icon {% if current_page == 'add_user' %} tab-active {% endif %}">
+        </a>
+    </div>
+</div>

@@ -15,7 +15,7 @@ class HistoryController extends AbstractController {
     public function history() {
 
 
-        $data =  array('current_page' => 'history', "color" => "red");
+        $data =  array('current_page' => 'history', "theme" => "red");
         return $this->render('history.html.twig', $data);
     }
 

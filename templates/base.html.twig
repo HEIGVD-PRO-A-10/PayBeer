@@ -8,6 +8,11 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+            {% if dark_mode %}
+                <link rel="stylesheet" href="{{ asset('css/theme/dark.css') }}">
+            {% else %}
+                <link rel="stylesheet" href="{{ asset('css/theme/classic.css') }}">
+            {% endif %}
         {% endblock %}
 
     </head>

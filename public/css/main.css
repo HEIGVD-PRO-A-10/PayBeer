@@ -1,14 +1,27 @@
 body, html {
     height: 100%;
+    padding: 0!important;
 }
 
 .page-content{
-    height: 90%;
+    height: 87%;
 }
 
+.title-light-info{
+    color: #ff0266!important;
+    font-weight: lighter;
+}
+
+.page-content{
+    padding-top: 20px;
+}
+
+/* FOOTER */
 .footer-tab{
 
-    height: 10%;
+    height: 13%;
+    margin: 0;
+    padding-top: 20px;
     text-align: center;
 }
 
@@ -18,9 +31,49 @@ body, html {
 }
 
 .tab-icon {
-    width: 50px;
+    width: 35px;
 }
 
+.tab-active {
+    filter: invert(13%) sepia(94%) saturate(6967%) hue-rotate(331deg) brightness(101%) contrast(103%) !important;
+}
+
+/* USER FORM */
+
+.form-user-top{
+}
+
+.form-title{
+    text-align: center;
+}
+.title-id{
+    text-align: right;
+    display: flex;
+    direction: rtl;
+    align-self: center;
+}
+
+.form-user{
+    margin-top: 50px;
+}
+
+.user-form-close {
+    width: 40px;
+}
+
+.btn-form-user{
+    height: 60px;
+    font-size: 18pt;
+}
+
+/*CHANGE DEFAULT BOOTSTRAP*/
+.btn {
+    border-radius: 0!important;
+}
+.btn-primary{
+    background-color: #ff0266!important;
+    border-color: transparent!important;
+}
 
 /*Change text to icon responsively*/
 @media (min-width: 641px) {

@@ -14,7 +14,7 @@ class UsersListController extends AbstractController {
     public function listUsers() {
 
 
-        $data =  array('current_page' => 'list_user', "color" => "red");
+        $data =  array('current_page' => 'list_user', "theme" => "red");
         return $this->render('listUser.html.twig', $data);
     }
 

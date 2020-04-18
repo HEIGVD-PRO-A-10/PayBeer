@@ -1,33 +1,47 @@
 
 
-<h1>{% if isEdit %} Modifier {% else %} Ajouter {% endif %}</h1>
+<div class="form-user-top row">
 
-<form>
+    <a class="col-3" href="{{ path('list_user') }}">
+        {#    <img src="{{ asset("icon/times-circle-regular.svg") }}" class="user-form-close icon">#}
+        <img src="{{ asset("icon/back.svg") }}" class="user-form-close icon">
+    </a>
 
-    <div class="form-group">
-        <label for="inputName">Nom</label>
+    <h1 class="col-5 form-title">{% if isEdit %} Modifier {% else %} Ajouter {% endif %}</h1>
+
+    <h4 class="col-4 title-id title-light-info">#{{ id }}</h4>
+
+</div>
+
+
+
+<form class="form-user">
+
+    <div class="form-group form-user-group">
+        <label for="inputName"><h4>Nom</h4></label>
         <input type="text" class="form-control" id="inputName" placeholder="Nom" value="{% if isEdit %}{{ name }}{% endif %}">
     </div>
 
-    <div class="form-group">
-        <label for="inputFirstname">Prénom</label>
+    <div class="form-group form-user-group">
+        <label for="inputFirstname"><h4>Prénom</h4></label>
         <input type="text" class="form-control" id="inputFirstname" placeholder="Prénom" value="{% if isEdit %}{{ firstname }}{% endif %}">
     </div>
 
     {% if isEdit %}
 
-        <div class="form-group">
-            <label for="inputAmount">Montant du compte</label>
+        <div class="form-group form-user-group">
+            <label for="inputAmount"><h4>Montant du compte</h4></label>
             <input type="number" class="form-control" id="inputAmount" placeholder="Montant du compte" value="{% if isEdit %}{{ amount }}{% endif %}">
         </div>
 
-        <div class="form-group form-check">
+        <div class="form-group form-check form-user-group">
             <input type="checkbox" class="form-check-input" id="statusCheck" {% if active %} checked {% endif %}>
-            <label class="form-check-label" for="exampleCheck1">Utilisateur actif</label>
+            <label class="form-check-label" for="exampleCheck1"><h4>Utilisateur actif</h4></label>
         </div>
 
     {% endif %}
+    <input id="idUser" value="{{ id }}" hidden>
 
-    <button type="submit" class="btn btn-primary">{% if isEdit %} Modifier {% else %} Ajouter {% endif %}</button>
+    <button type="submit" class="btn btn-primary btn-form-user col-12 fixed-bottom">{% if isEdit %} Modifier {% else %} Ajouter {% endif %}</button>
 
 </form>
