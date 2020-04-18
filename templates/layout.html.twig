@@ -1,0 +1,66 @@
+{% set route_name = app.request.attributes.get('_route') %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %}</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/all.min.css') }}" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+
+    <meta name="theme-color" content="#563d7c">
+    <style>
+        body {
+            padding-top: 5rem;
+        }
+    </style>
+</head>
+<body>
+{% block body %}
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">PayBeer</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+                    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item {{ route_name == 'home' ? 'active' }}">
+                        <a class="nav-link" href="{{ path('home') }}"><i class="fa fa-tachometer-alt"></i> Dashboard
+                            <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item {{ route_name == 'list_user' ? 'active' }}">
+                        <a class="nav-link" href="{{ path('list_user') }}"><i class="fa fa-users"></i> Liste des
+                            utilisateurs</a>
+                    </li>
+                    <li class="nav-item {{ route_name == 'history' ? 'active' }}">
+                        <a class="nav-link" href="{{ path('history') }}"><i class="fa fa-history"></i> Historique des
+                            transactions</a>
+                    </li>
+                    <li class="nav-item {{ route_name == 'newUsers' ? 'active' }}">
+                        <a class="nav-link" href="#"><i class="fa fa-user-plus"></i> Nouveaux utilisateurs</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main role="main" class="container">
+
+        {% block main %}
+
+        {% endblock %}
+
+    </main>
+{% endblock %}
+
+<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+</body>
+</html>

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}PayBeer{% endblock %}</title>
 
         {% block stylesheets %}
+            <!-- Bootstrap -->
             <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
             <!-- FontAwesome -->
@@ -23,6 +24,10 @@
     <body class="container-fluid">
 
         {% block body %}
+        {% endblock %}
+
+        {% block footer %}
+            {% include 'footer.html.twig' %}
         {% endblock %}
 
         {% block javascripts %}
