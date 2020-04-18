@@ -2,8 +2,32 @@
 
 {% block page %}
 
-{% endblock %}
 
+    <div class="col-12 content-list-users" id="listUser">
+
+        <div class="col-12">
+            <h1 class="list-user-title">Utilisateurs</h1>
+        </div>
+
+        {% for user in users %}
+            <div class="user col-12" id="{{ user['id'] }}">
+                <div class="row">
+                    <a class="col-10" data-toggle="collapse" href="#collapseUserInfo{{ user['id'] }}" role="button" aria-expanded="false" aria-controls="collapseUserInfo{{ user['id'] }}">
+                        <h4>#{{ user['id'] }} {{ user['lastname'] }} {{ user['firstname'] }}</h4>
+                    </a>
+                    <a href="{{ path('edit_user', {'userID': user['id']}) }}" class="col-2">
+                        <img src="{{ asset("icon/user-edit-solid.svg") }}" class="user-form-close icon">
+                    </a>
+                </div>
+                <div class="collapse" id="collapseUserInfo{{ user['id'] }}">
+                    <p>Montant : {{ user['amount'] }}</p>
+                    <p>Actif : {{ user['isActiv'] }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
 
 
 {% block footer %}

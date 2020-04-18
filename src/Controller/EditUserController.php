@@ -14,7 +14,7 @@ class EditUserController extends AbstractController {
      */
     public function editUser($userID) {
 
-        //TODO: check id exist
+        //TODO: check id exist and get user info with id
 
         $data =  array(
             'current_page' => 'edit_user',
