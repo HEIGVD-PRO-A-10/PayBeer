@@ -10,9 +10,9 @@
         </div>
 
         {% for user in users %}
-            <div class="new-user col-12" id="{{ user['id'] }}">
-                <a class="col-12" href="{{ path('add_user', {'id': user['id'], 'tag_rfid': user['tag_rfid']}) }}">
-                    <h4>#{{ user['id'] }} - {{ user['tag_rfid'] }}</h4>
+            <div class="new-user col-12">
+                <a href="{{ path('add_user', {'id': user['id'], 'tag_rfid': user['tag_rfid']}) }}">
+                    <h3>#{{ user['id'] }} - {{ user['tag_rfid'] }}</h3>
                 </a>
             </div>
         {% endfor %}
