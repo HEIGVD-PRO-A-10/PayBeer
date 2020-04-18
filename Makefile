@@ -29,7 +29,11 @@ stop: ## Stop les conteneurs
 .PHONY: clean
 clean: ## Stop et supprime les conteneurs
 	$(dc) down
-	
-.PHONY: updateDB
-clean: ## Stop et supprime les conteneurs
+
+.PHONY: migrate
+migrate: ## Effectue les migrations
 	$(sy) doctrine:migrations:migrate
+
+.PHONY: mysql
+mysql: ## MySQL en ligne de commande
+	$(de) db mysql -uroot -proot
