@@ -13,8 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity("tag_rfid")
  */
-class User
-{
+class User {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -145,5 +144,9 @@ class User
         $createdAt = new DateTime('now');
         if ($this->getCreatedAt() === null)
             $this->setCreatedAt($createdAt);
+    }
+
+    public function __toString() {
+        return (string)$this->getId();
     }
 }
