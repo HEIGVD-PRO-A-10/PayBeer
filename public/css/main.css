@@ -72,6 +72,11 @@ body, html {
     overflow: auto;
 }
 
+/* LIST NEW USER */
+.content-list-new-users{
+    max-height: 100%;
+    overflow: auto;
+}
 
 /*CHANGE DEFAULT BOOTSTRAP*/
 .btn {
