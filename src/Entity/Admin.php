@@ -13,8 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\AdminRepository")
  * @UniqueEntity("email")
  */
-class Admin implements UserInterface
-{
+class Admin implements UserInterface {
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\Email
@@ -48,78 +47,55 @@ class Admin implements UserInterface
      */
     private $transactions;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->transactions = new ArrayCollection();
     }
 
-    public function getEmail(): ?string
-    {
+    public function getEmail(): ?string {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
+    public function setEmail(string $email): self {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getPassword(): ?string
-    {
+    public function getPassword(): ?string {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
-    {
+    public function setPassword(string $password): self {
         $this->password = $password;
 
         return $this;
     }
 
-    public function getPinTerminal(): ?string
-    {
+    public function getPinTerminal(): ?string {
         return $this->pin_terminal;
     }
 
-    public function setPinTerminal(?string $pin_terminal): self
-    {
+    public function setPinTerminal(?string $pin_terminal): self {
         $this->pin_terminal = $pin_terminal;
 
         return $this;
     }
 
-    public function getPhoneNumber(): ?string
-    {
+    public function getPhoneNumber(): ?string {
         return $this->phone_number;
     }
 
-    public function setPhoneNumber(?string $phone_number): self
-    {
+    public function setPhoneNumber(?string $phone_number): self {
         $this->phone_number = $phone_number;
 
         return $this;
     }
 
-    public function getRelation(): ?string
-    {
-        return $this->relation;
-    }
-
-    public function setRelation(string $relation): self
-    {
-        $this->relation = $relation;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
+    public function getUser(): ?User {
         return $this->user;
     }
 
-    public function setUser(User $user): self
-    {
+    public function setUser(User $user): self {
         $this->user = $user;
 
         return $this;
@@ -128,13 +104,11 @@ class Admin implements UserInterface
     /**
      * @return Collection|Transaction[]
      */
-    public function getTransactions(): Collection
-    {
+    public function getTransactions(): Collection {
         return $this->transactions;
     }
 
-    public function addTransaction(Transaction $transaction): self
-    {
+    public function addTransaction(Transaction $transaction): self {
         if (!$this->transactions->contains($transaction)) {
             $this->transactions[] = $transaction;
             $transaction->setAdmin($this);
@@ -143,8 +117,7 @@ class Admin implements UserInterface
         return $this;
     }
 
-    public function removeTransaction(Transaction $transaction): self
-    {
+    public function removeTransaction(Transaction $transaction): self {
         if ($this->transactions->contains($transaction)) {
             $this->transactions->removeElement($transaction);
             // set the owning side to null (unless already changed)
@@ -173,7 +146,7 @@ class Admin implements UserInterface
     /**
      * @inheritDoc
      */
-    public function getUsername():string {
+    public function getUsername(): string {
         return $this->email;
     }
 
@@ -181,5 +154,9 @@ class Admin implements UserInterface
      * @inheritDoc
      */
     public function eraseCredentials() {
+    }
+
+    public function __toString() {
+        return (string)$this->getUser()->getId();
     }
 }
