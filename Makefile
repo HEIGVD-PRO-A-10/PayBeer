@@ -31,7 +31,7 @@ clean: ## Stop et supprime les conteneurs
 	$(dc) down
 
 .PHONY: migrate
-migrate: ## Effectue les migrations
+migrate: ## Migration des bases de données
 	$(sy) doctrine:migrations:migrate
 
 .PHONY: mysql
