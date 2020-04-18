@@ -29,3 +29,7 @@ stop: ## Stop les conteneurs
 .PHONY: clean
 clean: ## Stop et supprime les conteneurs
 	$(dc) down
+	
+.PHONY: updateDB
+clean: ## Stop et supprime les conteneurs
+	$(sy) doctrine:migrations:migrate
