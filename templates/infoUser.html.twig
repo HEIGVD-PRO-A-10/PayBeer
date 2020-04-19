@@ -37,13 +37,13 @@
         {% endif %}
 
         <dt class="col-4">Solde du compte</dt>
-        <dd class="col-8">0 CHF</dd>
+        <dd class="col-8 {{ balance < 0 ? 'text-danger' : balance > 0 ? 'text-success' }}">{{ balance }} CHF</dd>
 
         <dt class="col-4">Compte créé le</dt>
         <dd class="col-8">{{ user.createdAt|date('d.m.Y à H:i') }}</dd>
     </dl>
 
-    <h2><i class="fa fa-tags"></i> Transactions</h2>
+    <h2><i class="fa fa-tags"></i> Transactions <a class="text-info" href="#"><i class="fa fa-plus"></i></a></h2>
     <hr>
     <form method="get">
         <div class="form-group">
@@ -67,15 +67,29 @@
         <table class="table">
             <thead>
             <tr>
-                <th>#</th>
+                <th>No</th>
                 <th>Montant</th>
                 <th>Date</th>
-                <th>Admin</th>
                 <th>Actions</th>
             </tr>
             </thead>
+            <tbody>
+            {% for transaction in user.transactions %}
+                <tr>
+                    <td><a href="#">{{ transaction.id }}</a></td>
+                    <td>{{ transaction.amount }} CHF</td>
+                    <td>{{ transaction.date|date('d.m.Y H:i') }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-outline-info"><i class="fa fa-pencil-alt"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-danger"><i class="fa fa-minus-circle"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
         </table>
-        <p class="text-muted text-center">Aucune transaction pour le moment</p>
+        {% if user.transactions is empty %}
+            <p class="text-muted text-center">Aucune transaction pour le moment</p>
+        {% endif %}
     </div>
 
 {% endblock %}

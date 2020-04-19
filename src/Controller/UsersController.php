@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,11 +75,16 @@ class UsersController extends AbstractController {
      * @Route("/user/{userID}", name="user_info")
      * @param $userID
      * @param UserRepository $userRepository
+     * @param TransactionRepository $transactionRepository
      * @return Response
      */
-    public function info($userID, UserRepository $userRepository) {
+    public function info($userID, UserRepository $userRepository, TransactionRepository $transactionRepository) {
         $user = $userRepository->find($userID);
-        return $this->render('infoUser.html.twig', ['user' => $user]);
+        $balance = 0;
+        foreach ($user->getTransactions() as $transaction) {
+            $balance += $transaction->getAmount();
+        }
+        return $this->render('infoUser.html.twig', ['user' => $user, 'balance' => $balance]);
     }
 
     /**

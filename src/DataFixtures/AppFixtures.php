@@ -13,8 +13,7 @@ use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class AppFixtures extends Fixture
-{
+class AppFixtures extends Fixture {
     private $passwordEncoder;
     /**
      * @var Generator
@@ -26,8 +25,7 @@ class AppFixtures extends Fixture
         $this->faker = Factory::create('fr_CH');
     }
 
-    public function load(ObjectManager $manager)
-    {
+    public function load(ObjectManager $manager) {
         $users = [
             ["Gil", "Balsiger", "gil.balsiger@heig-vd.ch"],
             ["Julien", "Béguin", "julien.beguin@heig-vd.ch"],
@@ -60,7 +58,7 @@ class AppFixtures extends Fixture
         }
 
         $userInstances = [];
-        for($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $user = new User();
             $status = $this->faker->randomElement(['NEW', 'ACTIVE', 'BLOCKED']);
             $user->setFirstname($status != 'NEW' ? $this->faker->firstName : '');
@@ -68,11 +66,12 @@ class AppFixtures extends Fixture
             $user->setCreatedAt($this->faker->dateTimeThisMonth);
             $user->setStatus($status);
             $user->setTagRfid((string)$this->faker->randomNumber(6));
-            $userInstances[] = $user;
+            if ($status != 'NEW')
+                $userInstances[] = $user;
             $manager->persist($user);
         }
 
-        for($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $transaction = new Transaction();
             $adminIndex = rand(0, count($adminInstances) - 1);
             $userIndex = rand(0, count($userInstances) - 1);
