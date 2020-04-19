@@ -17,10 +17,10 @@ class TransactionsController extends AbstractController {
     public function history(Request $request, TransactionRepository $transactionRepository) {
         if($query = $request->query->get('q')) {
             //$transactions = $transactionRepository->searchByLastnameOrFirstname($query);
-            return $this->render('history.html.twig', ['transactions' => [], 'query' => $query]);
+            return $this->render('transactions/history.html.twig', ['transactions' => [], 'query' => $query]);
         } else {
             $transactions = $transactionRepository->findBy([], ['date' => 'DESC']);
-            return $this->render('history.html.twig', ['transactions' => $transactions]);
+            return $this->render('transactions/history.html.twig', ['transactions' => $transactions]);
         }
     }
 

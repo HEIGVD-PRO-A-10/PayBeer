@@ -6,12 +6,17 @@ use App\Repository\AdminRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
     /**
      * @Route("/", name="home")
+     * @param TransactionRepository $transactionRepository
+     * @param UserRepository $userRepository
+     * @param AdminRepository $adminRepository
+     * @return Response
      */
     public function index(TransactionRepository $transactionRepository, UserRepository $userRepository, AdminRepository $adminRepository)
     {

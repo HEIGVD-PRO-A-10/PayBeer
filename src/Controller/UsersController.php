@@ -18,21 +18,7 @@ class UsersController extends AbstractController {
      */
     public function newUsers(UserRepository $userRepository) {
         $users = $userRepository->findAllNew();
-        return $this->render('newUserList.html.twig', ['users' => $users]);
-    }
-
-    /**
-     * @Route("/user/add/", name="user_add", methods={"GET"})
-     */
-    public function newUser(Request $request) {
-        return $this->render('addUser.html.twig', $data);
-    }
-
-    /**
-     * @Route("/user/add", name="user_add_post", methods={"POST"})
-     */
-    public function newUserPost(Request $request) {
-        return $this->render('addUser.html.twig', $data);
+        return $this->render('users/newUserList.html.twig', ['users' => $users]);
     }
 
     /**
@@ -43,7 +29,7 @@ class UsersController extends AbstractController {
      */
     public function editUser($userID, UserRepository $userRepository, Request $request) {
         $user = $userRepository->find($userID);
-        return $this->render('editUser.html.twig', ['user' => $user]);
+        return $this->render('users/editUser.html.twig', ['user' => $user]);
     }
 
     /**
@@ -84,7 +70,7 @@ class UsersController extends AbstractController {
         foreach ($user->getTransactions() as $transaction) {
             $balance += $transaction->getAmount();
         }
-        return $this->render('infoUser.html.twig', ['user' => $user, 'balance' => $balance]);
+        return $this->render('users/infoUser.html.twig', ['user' => $user, 'balance' => $balance]);
     }
 
     /**
@@ -95,10 +81,10 @@ class UsersController extends AbstractController {
     public function listUsers(Request $request, UserRepository $userRepository) {
         if($query = $request->query->get('q')) {
             $users = $userRepository->searchByLastnameOrFirstname($query);
-            return $this->render('listUser.html.twig', ['users' => $users, 'query' => $query]);
+            return $this->render('users/listUser.html.twig', ['users' => $users, 'query' => $query]);
         } else {
             $users = $userRepository->findAllCustom();
-            return $this->render('listUser.html.twig', ['users' => $users]);
+            return $this->render('users/listUser.html.twig', ['users' => $users]);
         }
     }
 
