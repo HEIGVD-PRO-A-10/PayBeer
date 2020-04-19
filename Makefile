@@ -34,6 +34,10 @@ clean: ## Stop et supprime les conteneurs
 migrate: ## Migration des bases de données
 	$(sy) doctrine:migrations:migrate
 
+.PHONY: fixtures
+fixtures: ## Rempli la base de donnée avec de fausses données
+	$(sy) doctrine:fixtures:load
+
 .PHONY: mysql
 mysql: ## MySQL en ligne de commande
 	$(de) db mysql -uroot -proot
