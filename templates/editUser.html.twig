@@ -1,5 +1,25 @@
-{% extends "content.html.twig" %}
+{% extends "layout.html.twig" %}
 
-{% block page %}
-    {% include 'formUser.html.twig' with { 'isEdit' : '1' } %}
+{% block main %}
+    <h1><i class="fa fa-user-edit"></i> {{ user.firstname }} {{ user.lastname }}</h1>
+    <hr>
+    <form method="post">
+        <div class="form-row">
+            <div class="col-sm-6 mb-3">
+                <label for="firstname">Prénom</label>
+                <input type="text" class="form-control" id="firstname" name="firstname" value="{{ user.firstname }}">
+            </div>
+            <div class="col-sm-6 mb-3">
+                <label for="lastname">Nom</label>
+                <input type="text" class="form-control" id="lastname" name="lastname" value="{{ user.lastname }}">
+            </div>
+        </div>
+        {% if user.status == 'BLOCKED' %}
+            <div class="alert alert-warning" role="alert">
+                <strong><i class="fa fa-exclamation-triangle"></i> Attention:</strong> Le compte de {{ user.firstname }} {{ user.lastname }} est actuellement bloqué !
+            </div>
+        {% endif %}
+        <button class="btn btn-primary" type="submit"><i class="fa fa-edit"></i> Modifier</button>
+        <a href="{{ path('user_info', {userID: user.id}) }}" class="btn btn-outline-secondary">Annuler</a>
+    </form>
 {% endblock %}

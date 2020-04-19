@@ -1,39 +1,52 @@
-{% extends "content.html.twig" %}
+{% extends "layout.html.twig" %}
 
-{% block page %}
-
-
-    <div class="col-12 content-list-users" id="listUser">
-
-        <div class="col-12">
-            <h1 class="list-user-title">Utilisateurs</h1>
-        </div>
-
-        <div class="col-12">
-            <input type="text" class="txt-search-user" placeholder="Rechercher">
-        </div>
-
-        {% for user in users %}
-            <div class="user col-12" id="{{ user['id'] }}">
-                <div class="row">
-                    <a class="col-10" data-toggle="collapse" href="#collapseUserInfo{{ user['id'] }}" role="button" aria-expanded="false" aria-controls="collapseUserInfo{{ user['id'] }}">
-                        <h4>#{{ user['id'] }} {{ user['lastname'] }} {{ user['firstname'] }}</h4>
-                    </a>
-                    <a href="{{ path('edit_user', {'userID': user['id']}) }}" class="col-2">
-                        <img src="{{ asset("icon/edit.svg") }}" class="user-edit icon">
-                    </a>
+{% block main %}
+    <h1><i class="fa fa-users"></i> Utilisateurs</h1>
+    <hr>
+    <form method="get">
+        <div class="form-group">
+            <label for="search" class="sr-only"></label>
+            <div class="input-group mb-3">
+                <input type="search" class="form-control" placeholder="Rechercher" value="{{ query|default }}" name="q"
+                       id="search" aria-describedby="search">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
                 </div>
-                <div class="collapse" id="collapseUserInfo{{ user['id'] }}">
-                    <p>Montant : {{ user['amount'] }}</p>
-                    <p>Actif : {{ user['isActiv'] }}</p>
-                </div>
+                {% if query is defined %}
+                    <div class="input-group-append">
+                        <a class="btn btn-outline-danger" href="{{ path('user_list') }}"><i class="fa fa-filter"></i>
+                            Clear</a>
+                    </div>
+                {% endif %}
             </div>
-        {% endfor %}
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Statut</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td><a href="{{ path('user_info', {userID: user.id}) }}">{{ user.lastname }}</a></td>
+                    <td>{{ user.firstname }}</td>
+                    {% if user.status == 'ACTIVE' %}
+                        <td><i class="fa fa-check text-success"></i></td>
+                    {% elseif user.status == 'NEW' %}
+                        <td><i class="fa fa-plus-circle text-primary"></i></td>
+                    {% elseif user.status == 'BLOCKED' %}
+                        <td><i class="fa fa-minus-circle text-danger"></i></td>
+                    {% else %}
+                        <td><i class="fa fa-question-circle"></i></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-{% endblock %}
-
-
-{% block footer %}
-    {% include 'footer.html.twig' %}
 {% endblock %}

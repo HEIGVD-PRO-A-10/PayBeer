@@ -1,0 +1,78 @@
+{% extends "layout.html.twig" %}
+
+{% block main %}
+    <h1><i class="fa fa-user"></i> {{ user.firstname }} {{ user.lastname }}</h1>
+    <hr>
+    <a href="{{ path('user_edit', {userID: user.id}) }}" class="btn btn-primary"><i class="fa fa-edit"></i> Éditer</a>
+    <a href="{{ path('user_delete', {userID: user.id}) }}" class="btn btn-outline-danger"
+       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréverible.')"><i
+                class="fa fa-trash"></i> Supprimer</a>
+    <dl class="row mt-4">
+        <dt class="col-4">Nom</dt>
+        <dd class="col-8">{{ user.lastname }}</dd>
+
+        <dt class="col-4">Prénom</dt>
+        <dd class="col-8">{{ user.firstname }}</dd>
+
+        <dt class="col-4">Tag RFID <i class="fa fa-credit-card"></i></dt>
+        <dd class="col-8">{{ user.tagRfid }}</dd>
+
+        <dt class="col-4">Statut du compte</dt>
+        {% if user.status == 'ACTIVE' %}
+            <dd class="col-8">
+                <i class="fa fa-check text-success"></i> Actif
+                <a href="{{ path('user_lock', {userID: user.id}) }}" class="btn btn-outline-danger ml-3"><i
+                            class="fa fa-minus-circle"></i> Bloquer</a>
+            </dd>
+        {% elseif user.status == 'NEW' %}
+            <dd class="col-8"><i class="fa fa-plus-circle text-primary"></i> Nouveau</dd>
+        {% elseif user.status == 'BLOCKED' %}
+            <dd class="col-8">
+                <i class="fa fa-minus-circle text-danger"></i> Bloqué
+                <a href="{{ path('user_unlock', {userID: user.id}) }}" class="btn btn-outline-success ml-3"><i
+                            class="fa fa-unlock"></i> Débloquer</a>
+            </dd>
+        {% else %}
+            <dd class="col-8"><i class="fa fa-question-circle"></i> Statut inconnu</dd>
+        {% endif %}
+
+        <dt class="col-4">Solde du compte</dt>
+        <dd class="col-8">0 CHF</dd>
+    </dl>
+
+    <h2><i class="fa fa-tags"></i> Transactions</h2>
+    <hr>
+    <form method="get">
+        <div class="form-group">
+            <label for="search" class="sr-only"></label>
+            <div class="input-group mb-3">
+                <input type="search" class="form-control" placeholder="Rechercher" value="{{ query|default }}" name="q"
+                       id="search" aria-describedby="search">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                </div>
+                {% if query is defined %}
+                    <div class="input-group-append">
+                        <a class="btn btn-outline-danger" href="{{ path('list_user') }}"><i class="fa fa-filter"></i>
+                            Clear</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>Admin</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+        </table>
+        <p class="text-muted text-center">Aucune transaction pour le moment</p>
+    </div>
+
+{% endblock %}

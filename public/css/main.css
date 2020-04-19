@@ -1,14 +1,14 @@
 body, html {
     height: 100%;
-    padding: 0!important;
+    padding: 0 !important;
 }
 
-.page-content{
+.page-content {
     height: 87%;
 }
 
-.title-light-info{
-    color: #ff0266!important;
+.title-light-info {
+    color: #ff0266 !important;
     font-weight: lighter;
 }
 
@@ -17,16 +17,17 @@ body, html {
 }
 
 /* FOOTER */
-.footer-tab{
-
-    height: 13%;
+.footer-tab {
+    height: 60px;
+    width: 100%;
     margin: 0;
-    padding-top: 20px;
+    padding: 0;
     text-align: center;
+    position: fixed;
+    bottom: 0;
 }
 
-.tab-item{
-
+.tab-item {
     text-align: center;
 }
 
@@ -40,20 +41,21 @@ body, html {
 
 /* USER FORM */
 
-.form-user-top{
+.form-user-top {
 }
 
-.form-title{
+.form-title {
     text-align: center;
 }
-.title-id{
+
+.title-id {
     text-align: right;
     display: flex;
     direction: rtl;
     align-self: center;
 }
 
-.form-user{
+.form-user {
     margin-top: 50px;
 }
 
@@ -61,7 +63,7 @@ body, html {
     width: 40px;
 }
 
-.btn-form-user{
+.btn-form-user {
     height: 60px;
     font-size: 18pt;
 }
@@ -104,13 +106,14 @@ body, html {
     height: 60px;
 }
 
-/*CHANGE DEFAULT BOOTSTRAP*/
+/* CHANGE DEFAULT BOOTSTRAP */
 .btn {
-    border-radius: 0!important;
+    border-radius: 0 !important;
 }
-.btn-primary{
-    background-color: #ff0266!important;
-    border-color: transparent!important;
+
+.btn-primary {
+    background-color: #ff0266 !important;
+    border-color: transparent !important;
 }
 
 /*Change text to icon responsively*/
@@ -118,14 +121,17 @@ body, html {
     .tab-icon {
         display: none;
     }
+
     .tab-text {
         display: inline-block;
     }
 }
+
 @media (max-width: 640px) {
     .tab-icon {
         display: inline-block;
     }
+
     .tab-text {
         display: none;
     }

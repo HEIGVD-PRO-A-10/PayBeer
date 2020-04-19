@@ -1,5 +1,47 @@
-{% extends "content.html.twig" %}
+{% extends "layout.html.twig" %}
 
-{% block footer %}
-    {% include 'footer.html.twig' %}
+{% block main %}
+    <h1><i class="fa fa-tags"></i> Transations</h1>
+    <hr>
+    <form method="get">
+        <div class="form-group">
+            <label for="search" class="sr-only"></label>
+            <div class="input-group mb-3">
+                <input type="search" class="form-control" placeholder="Rechercher" value="{{ query|default }}" name="q"
+                       id="search" aria-describedby="search">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                </div>
+                {% if query is defined %}
+                    <div class="input-group-append">
+                        <a class="btn btn-outline-danger" href="{{ path('user_list') }}"><i class="fa fa-filter"></i>
+                            Clear</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Montant</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in transactions %}
+                <tr>
+                    <td><a href="{{ path('user_info', {userID: transaction.user.id}) }}">{{ transaction.user.firstname }} {{ transaction.user.lastname }}</a></td>
+                    <td>{{ transaction.amount }} CHF</td>
+                    <td>{{ transaction.date|date('d.m.Y H:i') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if transactions is empty %}
+            <p class="text-muted text-center">Pas de transaction pour le moment</p>
+        {% endif %}
+    </div>
 {% endblock %}

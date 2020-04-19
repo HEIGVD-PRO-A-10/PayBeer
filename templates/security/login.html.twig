@@ -1,10 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %}Connexion à PayBeer{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 {% endblock %}
 
@@ -19,7 +17,7 @@
                 You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
             </div>
         {% endif %}
-
+        <i class="fa fa-beer mb-4" style="font-size: 4rem"></i>
         <h1 class="h3 font-weight-normal">Connexion à PayBeer</h1>
         <h2 class="h4 mb-4 font-weight-normal text-muted">Administration</h2>
         <label for="inputEmail" class="sr-only">Email</label>
