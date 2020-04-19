@@ -38,6 +38,16 @@ Installation des dépendances :
 make dep
 ```
 
+Création des tables dans la base de données :
+```
+make migrate
+```
+
+Remplissage de la bd avec des données de test :
+```
+make fixtures
+```
+
 Accéder aux applications :
 
 | Application | Lien                                           |
