@@ -1,1 +1,114 @@
 {% extends "layout.html.twig" %}
+
+{% block main %}
+    <h1><i class="fa fa-tachometer-alt"></i> Dashboard</h1>
+    <hr>
+    <div class="card-columns">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa fa-piggy-bank"></i> Solde général</h5>
+                <p class="card-text lead text-center" style="font-size: 2.8rem">1552.50 CHF</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa fa-user-secret"></i> Utilisateurs à découvert</h5>
+                <div class="card-text">
+                    <div class="row">
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6 text-danger">-15 CHF</dd>
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6 text-danger">-15 CHF</dd>
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6 text-danger">-15 CHF</dd>
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6 text-danger">-15 CHF</dd>
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6 text-danger">-15 CHF</dd>
+                    </div>
+                    <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa fa-users"></i> Derniers utilisateurs inscrits</h5>
+                <div class="card-text">
+                    <ul>
+                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
+                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
+                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
+                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
+                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
+                    </ul>
+                    <p class="text-center" style="margin: 0;"><a href="{{ path('user_list_new') }}">Voir plus ...</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa fa-tags"></i> Dernières transactions</h5>
+                <div class="card-text">
+                    <div class="row">
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6">-15 CHF</dd>
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6">-15 CHF</dd>
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6">-15 CHF</dd>
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6">-15 CHF</dd>
+                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
+                        <dd class="col-6">-15 CHF</dd>
+                    </div>
+                    <p class="text-center" style="margin: 0;"><a href="{{ path('history') }}">Voir plus ...</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa fa-user-lock"></i> Comptes bloqués</h5>
+                <div class="card-text">
+                    <div class="row">
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                    </div>
+                    <p class="text-center" style="margin: 0;"><a href="{{ path('history') }}">Voir plus ...</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa fa-user-shield"></i> Comptes administrateurs</h5>
+                <div class="card-text">
+                    <div class="row">
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa fa-beer"></i> Comptes staff</h5>
+                <div class="card-text">
+                    <div class="row">
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
