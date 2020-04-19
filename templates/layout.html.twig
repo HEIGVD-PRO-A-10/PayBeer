@@ -23,7 +23,7 @@
 {% block body %}
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">PayBeer</a>
+            <a class="navbar-brand" href="#"><i class="fa fa-beer"></i> PayBeer</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
                     aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -35,23 +35,36 @@
                         <a class="nav-link" href="{{ path('home') }}"><i class="fa fa-tachometer-alt"></i> Dashboard
                             <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item {{ route_name == 'list_user' ? 'active' }}">
-                        <a class="nav-link" href="{{ path('list_user') }}"><i class="fa fa-users"></i> Liste des
-                            utilisateurs</a>
+                    <li class="nav-item {{ route_name == 'user_list' ? 'active' }}">
+                        <a class="nav-link" href="{{ path('user_list') }}"><i class="fa fa-users"></i> Utilisateurs</a>
                     </li>
                     <li class="nav-item {{ route_name == 'history' ? 'active' }}">
-                        <a class="nav-link" href="{{ path('history') }}"><i class="fa fa-history"></i> Historique des
-                            transactions</a>
+                        <a class="nav-link" href="{{ path('history') }}"><i class="fa fa-history"></i> Transactions</a>
                     </li>
                     <li class="nav-item {{ route_name == 'newUsers' ? 'active' }}">
                         <a class="nav-link" href="#"><i class="fa fa-user-plus"></i> Nouveaux utilisateurs</a>
                     </li>
                 </ul>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <span class="navbar-text">Bonjour, {{ app.user.user.firstname }} {{ app.user.user.lastname }} <a href="{{ path('app_logout') }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-sign-out-alt"></i> Se déconnecter</a></span>
+                {% endif %}
             </div>
         </div>
     </nav>
 
     <main role="main" class="container">
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} fade show" role="alert">
+                    {{ message|raw }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
 
         {% block main %}
 
