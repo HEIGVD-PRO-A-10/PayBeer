@@ -13,51 +13,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class UsersController extends AbstractController {
 
     /**
-     * @Route("/add", name="user_add")
+     * @Route("/users/new", name="user_list_new")
      */
-    public function addUser() {
-
-
-        //todo: chek if add user form was send
-
-        //list of user with new status
-        $newUsers = array(
-            array(
-                "id" => "1",
-                "tag_rfid" => "blblblb"
-            ),
-            array(
-                "id" => "2",
-                "tag_rfid" => "qwertzuiop"
-            ),
-            array(
-                "id" => "3",
-                "tag_rfid" => "asdfghjkl"
-            ),
-            array(
-                "id" => "4",
-                "tag_rfid" => "yxcvbn"
-            ),
-            array(
-                "id" => "5",
-                "tag_rfid" => "poiuztrew"
-            )
-        );
-
-        $data =  array('current_page' => 'new_user_list', "users" => $newUsers);
-
-        return $this->render('newUserList.html.twig', $data);
+    public function newUsers(UserRepository $userRepository) {
+        $users = $userRepository->findAllNew();
+        return $this->render('newUserList.html.twig', ['users' => $users]);
     }
 
     /**
-     * @Route("/addUser/{id}/{tag_rfid}", name="add_user")
+     * @Route("/user/add/", name="user_add", methods={"GET"})
      */
-    public function newUser($id, $tag_rfid) {
-        $data =  array(
-            'current_page' => 'add_user',
-            'id' => $id,
-            'tag_rfid' => $tag_rfid
-        );
+    public function newUser(Request $request) {
+        return $this->render('addUser.html.twig', $data);
+    }
+
+    /**
+     * @Route("/user/add", name="user_add_post", methods={"POST"})
+     */
+    public function newUserPost(Request $request) {
         return $this->render('addUser.html.twig', $data);
     }
 
@@ -67,7 +40,7 @@ class UsersController extends AbstractController {
      * @param UserRepository $userRepository
      * @return Response
      */
-    public function editUser($userID, UserRepository $userRepository) {
+    public function editUser($userID, UserRepository $userRepository, Request $request) {
         $user = $userRepository->find($userID);
         return $this->render('editUser.html.twig', ['user' => $user]);
     }
@@ -87,6 +60,9 @@ class UsersController extends AbstractController {
             if($user) {
                 $user->setFirstname($firstname);
                 $user->setLastname($lastname);
+                if ($user->getStatus() === 'NEW') {
+                    $user->setStatus('ACTIVE');
+                }
                 $entityManager->flush();
             }
         }
@@ -106,7 +82,7 @@ class UsersController extends AbstractController {
     }
 
     /**
-     * @Route("/list", name="user_list")
+     * @Route("/users", name="user_list")
      * @param UserRepository $userRepository
      * @return Response
      */
@@ -115,7 +91,7 @@ class UsersController extends AbstractController {
             $users = $userRepository->searchByLastnameOrFirstname($query);
             return $this->render('listUser.html.twig', ['users' => $users, 'query' => $query]);
         } else {
-            $users = $userRepository->findAll();
+            $users = $userRepository->findAllCustom();
             return $this->render('listUser.html.twig', ['users' => $users]);
         }
     }

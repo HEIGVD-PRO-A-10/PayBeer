@@ -1,4 +1,6 @@
-{% set route_name = app.request.attributes.get('_route') %}
+{% set route_name = app.request.attributes.get('_route')|default('/') %}
+{% set referer = app.request.headers.get('referer') %}
+{% set referer = referer != app.request.getUri ? referer : '/' %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -41,8 +43,8 @@
                     <li class="nav-item {{ route_name == 'history' ? 'active' }}">
                         <a class="nav-link" href="{{ path('history') }}"><i class="fa fa-history"></i> Transactions</a>
                     </li>
-                    <li class="nav-item {{ route_name == 'newUsers' ? 'active' }}">
-                        <a class="nav-link" href="#"><i class="fa fa-user-plus"></i> Nouveaux utilisateurs</a>
+                    <li class="nav-item {{ route_name == 'user_list_new' ? 'active' }}">
+                        <a class="nav-link" href="{{ path('user_list_new') }}"><i class="fa fa-user-plus"></i> Nouveaux utilisateurs</a>
                     </li>
                 </ul>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}

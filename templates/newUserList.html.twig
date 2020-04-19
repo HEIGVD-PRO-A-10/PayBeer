@@ -1,26 +1,47 @@
-{% extends "content.html.twig" %}
+{% extends "layout.html.twig" %}
 
-{% block page %}
-
-
-    <div class="col-12 content-list-new-users">
-
-        <div class="col-12">
-            <h1 class="list-new-user-title">En attente</h1>
-        </div>
-
-        {% for user in users %}
-            <div class="new-user col-12">
-                <a href="{{ path('add_user', {'id': user['id'], 'tag_rfid': user['tag_rfid']}) }}">
-                    <h3>#{{ user['id'] }} - {{ user['tag_rfid'] }}</h3>
-                </a>
+{% block main %}
+    <h1><i class="fa fa-users"></i> Utilisateurs</h1>
+    <hr>
+    <form method="get">
+        <div class="form-group">
+            <label for="search" class="sr-only"></label>
+            <div class="input-group mb-3">
+                <input type="search" class="form-control" placeholder="Rechercher" value="{{ query|default }}" name="q"
+                       id="search" aria-describedby="search">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                </div>
+                {% if query is defined %}
+                    <div class="input-group-append">
+                        <a class="btn btn-outline-danger" href="{{ path('user_list') }}"><i class="fa fa-filter"></i>
+                            Clear</a>
+                    </div>
+                {% endif %}
             </div>
-        {% endfor %}
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>RFID</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.tagRfid }}</td>
+                    <td>{{ user.createdAt|date('d.m.Y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('user_edit', {userID: user.id}) }}" class="btn btn-success"><i class="fa fa-user-plus"></i></a>
+                        <a href="{{ path('user_delete', {userID: user.id}) }}" class="btn btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette entrée ? Cette action est irréversible.')"><i class="fa fa-user-minus"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-{% endblock %}
-
-
-{% block footer %}
-    {% include 'footer.html.twig' %}
 {% endblock %}

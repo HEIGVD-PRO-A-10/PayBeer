@@ -62,10 +62,11 @@ class AppFixtures extends Fixture
         $userInstances = [];
         for($i = 0; $i < 100; $i++) {
             $user = new User();
-            $user->setFirstname($this->faker->firstName);
-            $user->setLastname($this->faker->lastName);
+            $status = $this->faker->randomElement(['NEW', 'ACTIVE', 'BLOCKED']);
+            $user->setFirstname($status != 'NEW' ? $this->faker->firstName : '');
+            $user->setLastname($status != 'NEW' ? $this->faker->lastName : '');
             $user->setCreatedAt($this->faker->dateTimeThisMonth);
-            $user->setStatus($this->faker->randomElement(['NEW', 'ACTIVE', 'BLOCKED']));
+            $user->setStatus($status);
             $user->setTagRfid((string)$this->faker->randomNumber(6));
             $userInstances[] = $user;
             $manager->persist($user);

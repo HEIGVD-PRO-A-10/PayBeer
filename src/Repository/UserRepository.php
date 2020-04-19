@@ -17,6 +17,13 @@ class UserRepository extends ServiceEntityRepository {
         parent::__construct($registry, User::class);
     }
 
+    public function findAllNew() {
+        return $this->createQueryBuilder('u')
+            ->where('u.status = \'NEW\'')
+            ->orderBy('u.created_at', 'DESC')
+            ->getQuery()->getResult();
+    }
+
     public function searchByLastnameOrFirstname($value) {
         $qb = $this->createQueryBuilder('u');
         return $qb->andWhere($qb->expr()->like('u.lastname', '?1'))
@@ -26,32 +33,11 @@ class UserRepository extends ServiceEntityRepository {
             ->getResult();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
+    public function findAllCustom() {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+            ->where('u.status != \'NEW\'')
+            ->orderBy('u.created_at', 'DESC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

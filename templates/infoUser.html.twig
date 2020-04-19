@@ -38,6 +38,9 @@
 
         <dt class="col-4">Solde du compte</dt>
         <dd class="col-8">0 CHF</dd>
+
+        <dt class="col-4">Compte créé le</dt>
+        <dd class="col-8">{{ user.createdAt|date('d.m.Y à H:i') }}</dd>
     </dl>
 
     <h2><i class="fa fa-tags"></i> Transactions</h2>
