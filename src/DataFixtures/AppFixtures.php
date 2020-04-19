@@ -43,6 +43,7 @@ class AppFixtures extends Fixture {
             $user->setLastname($userdata[1]);
             $user->setStatus('ACTIVE');
             $user->setTagRfid((string)$this->faker->randomNumber(6));
+            $user->setCreatedAt($this->faker->dateTimeThisYear);
             $admin = new Admin();
             $admin->setUser($user);
             $admin->setEmail($userdata[2]);
@@ -77,7 +78,7 @@ class AppFixtures extends Fixture {
             $userIndex = rand(0, count($userInstances) - 1);
             $transaction->setAdmin($adminInstances[$adminIndex]);
             $transaction->setUser($userInstances[$userIndex]);
-            $transaction->setAmount(rand(-20, 30));
+            $transaction->setAmount(rand(-28, 30));
             $transaction->setNumTerminal(rand(1, 2));
             $transaction->setDate($this->faker->dateTimeThisMonth);
 

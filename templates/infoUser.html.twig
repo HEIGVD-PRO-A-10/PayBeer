@@ -1,18 +1,29 @@
 {% extends "layout.html.twig" %}
 
 {% block main %}
-    <h1><i class="fa fa-user"></i> {{ user.firstname }} {{ user.lastname }}</h1>
+    <h1>
+        <i class="fa fa-user"></i>
+        {% if user.firstname is not empty and user.lastname is not empty %}
+            {{ user.firstname }} {{ user.lastname }}
+        {% else %}
+            RFID {{ user.tagRfid }}
+        {% endif %}
+    </h1>
     <hr>
     <a href="{{ path('user_edit', {userID: user.id}) }}" class="btn btn-primary"><i class="fa fa-edit"></i> Éditer</a>
     <a href="{{ path('user_delete', {userID: user.id}) }}" class="btn btn-outline-danger"
        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréverible.')"><i
                 class="fa fa-trash"></i> Supprimer</a>
     <dl class="row mt-4">
-        <dt class="col-4">Nom</dt>
-        <dd class="col-8">{{ user.lastname }}</dd>
+        {% if user.lastname %}
+            <dt class="col-4">Nom</dt>
+            <dd class="col-8">{{ user.lastname }}</dd>
+        {% endif %}
 
-        <dt class="col-4">Prénom</dt>
-        <dd class="col-8">{{ user.firstname }}</dd>
+        {% if user.firstname %}
+            <dt class="col-4">Prénom</dt>
+            <dd class="col-8">{{ user.firstname }}</dd>
+        {% endif %}
 
         <dt class="col-4">Tag RFID <i class="fa fa-credit-card"></i></dt>
         <dd class="col-8">{{ user.tagRfid }}</dd>

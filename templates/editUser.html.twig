@@ -6,7 +6,7 @@
         {% if user.firstname is not empty and user.lastname is not empty %}
             {{ user.firstname }} {{ user.lastname }}
         {% else %}
-            #{{ user.tagRfid }}
+            RFID {{ user.tagRfid }}
         {% endif %}
     </h1>
     <hr>

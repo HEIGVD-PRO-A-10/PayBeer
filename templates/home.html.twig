@@ -7,24 +7,19 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title"><i class="fa fa-piggy-bank"></i> Solde général</h5>
-                <p class="card-text lead text-center" style="font-size: 2.8rem">1552.50 CHF</p>
+                <p class="card-text lead text-center {{ balance < 0 ? 'text-danger' }}"
+                   style="font-size: 2.8rem">{{ balance }} CHF</p>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title"><i class="fa fa-user-secret"></i> Utilisateurs à découvert</h5>
+                <h5 class="card-title"><i class="fa fa-exclamation-triangle"></i> Utilisateurs à découvert</h5>
                 <div class="card-text">
                     <div class="row">
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6 text-danger">-15 CHF</dd>
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6 text-danger">-15 CHF</dd>
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6 text-danger">-15 CHF</dd>
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6 text-danger">-15 CHF</dd>
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6 text-danger">-15 CHF</dd>
+                        {% for user in overdraftUsers %}
+                            <dt class="col-6"><a href="{{ path('user_info', {userID: user.id}) }}">{{ user.firstname }} {{ user.lastname }}</a></dt>
+                            <dd class="col-6">{{ user.balance }} CHF</dd>
+                        {% endfor %}
                     </div>
                     <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
                 </div>
@@ -34,15 +29,21 @@
             <div class="card-body">
                 <h5 class="card-title"><i class="fa fa-users"></i> Derniers utilisateurs inscrits</h5>
                 <div class="card-text">
-                    <ul>
-                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
-                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
-                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
-                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
-                        <li><a href="#">Albert Levert</a> le 19.04.2020</li>
-                    </ul>
+                    <div class="row">
+                        {% for user in lastUsers %}
+                            <dt class="col-6">
+                                <a href="{{ path('user_info', {userID: user.id}) }}">
+                                    {% if user.status == 'NEW' %}
+                                        <i class="fa fa-tag"></i> {{ user.tagRfid }}
+                                    {% else %}
+                                        {{ user.firstname }} {{ user.lastname }}
+                                    {% endif %}
+                                </a>
+                            </dt>
+                            <dd class="col-6">{{ user.createdAt|date('d.m.Y') }}</dd>
+                        {% endfor %}
+                    </div>
                     <p class="text-center" style="margin: 0;"><a href="{{ path('user_list_new') }}">Voir plus ...</a>
-                    </p>
                 </div>
             </div>
         </div>
@@ -51,16 +52,12 @@
                 <h5 class="card-title"><i class="fa fa-tags"></i> Dernières transactions</h5>
                 <div class="card-text">
                     <div class="row">
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6">-15 CHF</dd>
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6">-15 CHF</dd>
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6">-15 CHF</dd>
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6">-15 CHF</dd>
-                        <dt class="col-6"><a href="#">Albert Levert</a></dt>
-                        <dd class="col-6">-15 CHF</dd>
+                        {% for transaction in transactions %}
+                            <dt class="col-6">
+                                <a href="{{ path('user_info', {userID: transaction.user.id}) }}">{{ transaction.user.firstname }} {{ transaction.user.lastname }}</a>
+                            </dt>
+                            <dd class="col-6">{{ transaction.amount }} CHF</dd>
+                        {% endfor %}
                     </div>
                     <p class="text-center" style="margin: 0;"><a href="{{ path('history') }}">Voir plus ...</a></p>
                 </div>
@@ -71,13 +68,13 @@
                 <h5 class="card-title"><i class="fa fa-user-lock"></i> Comptes bloqués</h5>
                 <div class="card-text">
                     <div class="row">
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        {% for user in blockedUsers %}
+                            <div class="col-6"><a
+                                        href="{{ path('user_info', {userID: user.id}) }}">{{ user.firstname }} {{ user.lastname }}</a>
+                            </div>
+                        {% endfor %}
                     </div>
-                    <p class="text-center" style="margin: 0;"><a href="{{ path('history') }}">Voir plus ...</a></p>
+                    <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
                 </div>
             </div>
         </div>
@@ -86,11 +83,11 @@
                 <h5 class="card-title"><i class="fa fa-user-shield"></i> Comptes administrateurs</h5>
                 <div class="card-text">
                     <div class="row">
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
+                        {% for admin in admins %}
+                            <div class="col-6"><a
+                                        href="{{ path('user_info', {userID: admin.user.id}) }}">{{ admin.user.firstname }} {{ admin.user.lastname }}</a>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -99,13 +96,7 @@
             <div class="card-body">
                 <h5 class="card-title"><i class="fa fa-beer"></i> Comptes staff</h5>
                 <div class="card-text">
-                    <div class="row">
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                        <div class="col-6"><a href="#">Albert Levert</a></div>
-                    </div>
+                    <p class="text-muted"><i>Pas disponible pour le moment</i></p>
                 </div>
             </div>
         </div>
