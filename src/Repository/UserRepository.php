@@ -46,7 +46,7 @@ class UserRepository extends ServiceEntityRepository {
         $sql = 'SELECT u.*, SUM(t.amount) AS "balance"
                 FROM transaction t
                     INNER JOIN user u ON t.user_id = u.id
-                GROUP BY u.lastname
+                GROUP BY u.id
                 HAVING SUM(t.amount) < 0
                 ORDER BY SUM(t.amount);';
         $stmt = $conn->prepare($sql);
