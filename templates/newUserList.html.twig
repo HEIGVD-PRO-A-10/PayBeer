@@ -1,0 +1,26 @@
+{% extends "content.html.twig" %}
+
+{% block page %}
+
+
+    <div class="col-12 content-list-new-users">
+
+        <div class="col-12">
+            <h1 class="list-new-user-title">En attente</h1>
+        </div>
+
+        {% for user in users %}
+            <div class="new-user col-12">
+                <a href="{{ path('add_user', {'id': user['id'], 'tag_rfid': user['tag_rfid']}) }}">
+                    <h3>#{{ user['id'] }} - {{ user['tag_rfid'] }}</h3>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'footer.html.twig' %}
+{% endblock %}

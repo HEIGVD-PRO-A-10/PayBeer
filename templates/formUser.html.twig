@@ -2,20 +2,20 @@
 
 <div class="form-user-top row">
 
-    <a class="col-3" href="{{ path('list_user') }}">
+    <a class="col-3" href="{% if isEdit %} {{ path('list_user') }} {% else %} {{ path('new_user_list') }} {% endif %}">
         {#    <img src="{{ asset("icon/times-circle-regular.svg") }}" class="user-form-close icon">#}
         <img src="{{ asset("icon/back.svg") }}" class="user-form-close icon">
     </a>
 
     <h1 class="col-5 form-title">{% if isEdit %} Modifier {% else %} Ajouter {% endif %}</h1>
 
-    <h4 class="col-4 title-id title-light-info">#{{ id }}</h4>
+    <h4 class="col-4 title-id title-light-info">#{{ id }} {% if isEdit == 0 %} {{ tag_rfid }} {% endif %}</h4>
 
 </div>
 
 
 
-<form class="form-user" action="" method="post">
+<form class="form-user" method="post" action="{% if isEdit %} {{ path('list_user') }} {% else %} {{ path('new_user_list') }} {% endif %}">
 
     <div class="form-group form-user-group">
         <label for="inputName"><h4>Nom</h4></label>
