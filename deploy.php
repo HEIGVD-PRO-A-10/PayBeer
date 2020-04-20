@@ -34,8 +34,15 @@ task('deploy:vendors', function () {
     run('cd {{release_path}} && /opt/php7.4/bin/composer install --optimize-autoloader');
 });
 
+desc('Fill database');
+task('database:fixtures', function() {
+    run('{{bin/php}} {{bin/console}} doctrine:fixtures:load {{console_options}}');
+});
+
 // [Optional] if deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
 
 // Migrate database before symlink new release.
 before('deploy:symlink', 'database:migrate');
+
+after('database:migrate', 'database:fixtures');
