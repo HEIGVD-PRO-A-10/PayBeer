@@ -5,22 +5,15 @@ require 'recipe/symfony4.php';
 
 // Project name
 set('application', 'paybeer');
-
 set('http_user', 'www-data');
+set('bin/php', '/opt/php7.4/bin/php');
+set('bin/composer', '/opt/php7.4/bin/composer');
 
 // Project repository
 set('repository', 'git@github.com:HEIGVD-PRO-A-10/PayBeer.git');
 
 // [Optional] Allocate tty for git clone. Default value is false.
-set('git_tty', true); 
-
-// Shared files/dirs between deploys 
-add('shared_files', []);
-add('shared_dirs', []);
-
-// Writable dirs by web server 
-add('writable_dirs', []);
-
+set('git_tty', true);
 
 // Hosts
 host('4d30w.ftp.infomaniak.com')
@@ -31,12 +24,12 @@ host('4d30w.ftp.infomaniak.com')
 
 desc('Composer install dependencies');
 task('deploy:vendors', function () {
-    run('cd {{release_path}} && /opt/php7.4/bin/composer install --optimize-autoloader');
+    run('cd {{release_path}} && {{bin/composer}} install --optimize-autoloader');
 });
 
 desc('Fill database');
 task('database:fixtures', function() {
-    run('{{bin/php}} {{bin/console}} doctrine:fixtures:load {{console_options}}');
+    run('{{bin/php}} {{bin/console}} doctrine:fixtures:load --no-interaction');
 });
 
 // [Optional] if deploy fails automatically unlock.
