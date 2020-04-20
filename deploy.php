@@ -9,6 +9,10 @@ set('http_user', 'www-data');
 set('bin/php', '/opt/php7.4/bin/php');
 set('bin/composer', '/opt/php7.4/bin/composer');
 
+set('bin/console', function () {
+    return parse('{{release_path}}/bin/console');
+});
+
 // Project repository
 set('repository', 'git@github.com:HEIGVD-PRO-A-10/PayBeer.git');
 
@@ -25,6 +29,11 @@ host('4d30w.ftp.infomaniak.com')
 desc('Composer install dependencies');
 task('deploy:vendors', function () {
     run('cd {{release_path}} && {{bin/composer}} install --optimize-autoloader');
+});
+
+desc('Migrate database');
+task('database:migrate', function() {
+    run('{{bin/php}} {{bin/console}} doctrine:migrations:migrate --allow-no-migration --no-interaction');
 });
 
 desc('Fill database');
