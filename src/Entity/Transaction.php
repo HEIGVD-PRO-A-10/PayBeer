@@ -22,7 +22,7 @@ class Transaction
     private $amount;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $date;
 
