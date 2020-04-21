@@ -62,15 +62,18 @@ class ApiController extends AbstractController {
      *         response="200",
      *         description="Token JWT",
      *         @OA\JsonContent(
-     *             type="string",
-     *             description="Token JWT",
+     *             type="object",
+     *             @OA\Property(property="token", type="string"),
      *             example={"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImF1ZCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGkiLCJpYXQiOjE1ODc0NjQ3MjAsImV4cCI6MTU4NzQ2ODMyMH0.Dg4YTnlQnESWNzKs25dajb8_XMQdeAfkxMM62RjjlHE"}
      *         ),
      *     ),
      *     @OA\Response(
      *         response="401",
-     *         description="Paramètres incorrectes",
      *         ref="#/components/responses/unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         ref="#/components/responses/bad_request"
      *     ),
      * )
      */
@@ -111,26 +114,41 @@ class ApiController extends AbstractController {
      * @Route("/debit", name="debit")
      * @param Request $request
      * @return Response
+     *
+     * @OA\Post(
+     *     path="/transaction",
+     *     summary="Ajoute une nouvelle transaction",
+     *     description="Cette transaction peut être un débit ou bien un crédit selon le signe de la valeur.",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(property="tag_rfid", type="string", description="Tag RFID", example="123456"),
+     *                 @OA\Property(property="amount", type="string", description="Montant de la transaction", example="15"),
+     *                 @OA\Property(property="num_terminal", type="integer", description="Numéro du terminal utilisé pour effectuer la transaction", default="1", example="1"),
+     *                 @OA\Property(property="admin_id", type="integer", description="Identifiant de l'administrateur ayant effectuer la transaction", example="123"),
+     *                 required={"tag_rfid", "amount", "num_terminal", "admin_id"},
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Transaction créée"
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         ref="#/components/responses/unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         ref="#/components/responses/bad_request"
+     *     ),
+     * )
      */
-    public function debit(Request $request): Response {
+    public function transaction(Request $request): Response {
         if ($this->authorize($request)) {
             return $this->doTransaction($request, TransactionType::DEBIT);
-        } else {
-            $response = new JsonResponse(['status' => 'error', 'message' => "Accès non-autorisé"]);
-            $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
-            return $response;
-        }
-    }
-
-    /**
-     * @Route("/credit", name="credit")
-     * @param Request $request
-     * @return Response
-     * @throws Exception
-     */
-    public function credit(Request $request): Response {
-        if ($this->authorize($request)) {
-            return $this->doTransaction($request, TransactionType::CREDIT);
         } else {
             $response = new JsonResponse(['status' => 'error', 'message' => "Accès non-autorisé"]);
             $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
@@ -142,30 +160,55 @@ class ApiController extends AbstractController {
      * @Route("/new-user", name="new_user", methods={"GET"})
      * @param Request $request
      * @return Response
+     *
+     * @OA\Post(
+     *     path="/new-user",
+     *     summary="Ajoute un nouvelle utilisateur",
+     *     description="Si le tag RFID existe déjà en base de donnée, dans ce cas l'API renvoie une erreur de type 400",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(property="tag_rfid", type="string", description="Tag RFID", example="123456"),
+     *                 required={"tag_rfid"},
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Utilisateur ajouté"
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         ref="#/components/responses/unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Si le tag RFID existe déjà en base de donnée ou que les paramètres sont incorrects",
+     *         @OA\JsonContent(ref="#/components/schemas/Error")
+     *     ),
+     * )
      */
     public function newUser(Request $request): Response {
         if ($this->authorize($request)) {
             $entityManager = $this->getDoctrine()->getManager();
             $repository = $this->getDoctrine()->getRepository(User::class);
 
-            $firstname = $request->query->get('firstname');
-            $lastname = $request->query->get('lastname');
             $tagRfid = $request->query->get('tag_rfid');
 
-            if (!empty($firstname) && !empty($lastname) && !empty($tagRfid)) {
+            if (!empty($tagRfid)) {
                 $existingUser = $repository->findOneBy(['tag_rfid' => $tagRfid]);
                 if (!$existingUser) {
                     $user = new User();
                     $user
-                        ->setFirstname($firstname)
-                        ->setLastname($lastname)
                         ->setTagRfid($tagRfid)
                         ->setStatus('new');
 
                     $entityManager->persist($user);
                     $entityManager->flush();
 
-                    $response = new JsonResponse(['status' => 'success', 'message' => "$firstname $lastname a bien été enregistré avec le tag RFID $tagRfid"]);
+                    $response = new JsonResponse(['status' => 'success', 'message' => "L'utilisateur '$tagRfid' a bien été enregistré."]);
                     $response->setStatusCode(Response::HTTP_CREATED);
                     return $response;
                 } else {

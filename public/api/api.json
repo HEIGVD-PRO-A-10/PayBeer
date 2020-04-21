@@ -48,8 +48,12 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "description": "Token JWT",
-                                    "type": "string"
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
                                 },
                                 "example": {
                                     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImF1ZCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGkiLCJpYXQiOjE1ODc0NjQ3MjAsImV4cCI6MTU4NzQ2ODMyMH0.Dg4YTnlQnESWNzKs25dajb8_XMQdeAfkxMM62RjjlHE"
@@ -58,8 +62,110 @@
                         }
                     },
                     "401": {
-                        "description": "Paramètres incorrectes",
                         "$ref": "#/components/responses/unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/bad_request"
+                    }
+                }
+            }
+        },
+        "/transaction": {
+            "post": {
+                "summary": "Ajoute une nouvelle transaction",
+                "description": "Cette transaction peut être un débit ou bien un crédit selon le signe de la valeur.",
+                "operationId": "App\\Controller\\Api\\ApiController::transaction",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "required": [
+                                    "tag_rfid",
+                                    "amount",
+                                    "num_terminal",
+                                    "admin_id"
+                                ],
+                                "properties": {
+                                    "tag_rfid": {
+                                        "description": "Tag RFID",
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "amount": {
+                                        "description": "Montant de la transaction",
+                                        "type": "string",
+                                        "example": "15"
+                                    },
+                                    "num_terminal": {
+                                        "description": "Numéro du terminal utilisé pour effectuer la transaction",
+                                        "type": "integer",
+                                        "default": "1",
+                                        "example": "1"
+                                    },
+                                    "admin_id": {
+                                        "description": "Identifiant de l'administrateur ayant effectuer la transaction",
+                                        "type": "integer",
+                                        "example": "123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transaction créée"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthorized"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/bad_request"
+                    }
+                }
+            }
+        },
+        "/new-user": {
+            "post": {
+                "summary": "Ajoute un nouvelle utilisateur",
+                "description": "Si le tag RFID existe déjà en base de donnée, dans ce cas l'API renvoie une erreur de type 400",
+                "operationId": "App\\Controller\\Api\\ApiController::newUser",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "required": [
+                                    "tag_rfid"
+                                ],
+                                "properties": {
+                                    "tag_rfid": {
+                                        "description": "Tag RFID",
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Utilisateur ajouté"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthorized"
+                    },
+                    "400": {
+                        "description": "Si le tag RFID existe déjà en base de donnée ou que les paramètres sont incorrects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -86,6 +192,16 @@
         "responses": {
             "unauthorized": {
                 "description": "Non-authorisé",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "bad_request": {
+                "description": "Paramètres incorrects",
                 "content": {
                     "application/json": {
                         "schema": {

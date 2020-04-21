@@ -27,6 +27,12 @@ use OpenApi\Annotations as OA;
  *     @OA\JsonContent(ref="#/components/schemas/Error")
  * )
  *
+ * @OA\Response(
+ *     response="bad_request",
+ *     description="Paramètres incorrects",
+ *     @OA\JsonContent(ref="#/components/schemas/Error")
+ * )
+ *
  * @OA\Schema(
  *     type="object",
  *     schema="Error",
