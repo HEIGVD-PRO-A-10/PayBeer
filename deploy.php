@@ -38,7 +38,7 @@ task('database:migrate', function() {
 
 desc('Fill database');
 task('database:fixtures', function() {
-    run('{{bin/php}} {{bin/console}} doctrine:fixtures:load --no-interaction');
+    run('{{bin/php}} {{bin/console}} doctrine:fixtures:load --no-interaction -e dev');
 });
 
 // [Optional] if deploy fails automatically unlock.

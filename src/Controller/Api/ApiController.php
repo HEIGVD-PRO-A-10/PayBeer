@@ -47,6 +47,7 @@ class ApiController extends AbstractController {
      *     path="/login",
      *     summary="Authentification à l'API",
      *     description="Il est nécessaire d'appeler cette route afin de s'authentifier à l'API. Celle-ci renvoie un token JWT en cas de succès. Ce token est valable 1 heure par défaut.",
+     *     tags={"paybeer"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/x-www-form-urlencoded",
@@ -121,6 +122,7 @@ class ApiController extends AbstractController {
      *     path="/transaction",
      *     summary="Ajoute une nouvelle transaction",
      *     description="Cette transaction peut être un débit ou bien un crédit selon le signe de la valeur.",
+     *     tags={"paybeer"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/x-www-form-urlencoded",
@@ -146,6 +148,7 @@ class ApiController extends AbstractController {
      *         response="400",
      *         ref="#/components/responses/bad_request"
      *     ),
+     *     security={"jwt": {}}
      * )
      */
     public function transaction(Request $request, UserRepository $userRepository, AdminRepository $adminRepository): Response {
@@ -167,6 +170,7 @@ class ApiController extends AbstractController {
      *     path="/new-user",
      *     summary="Ajoute un nouvelle utilisateur",
      *     description="Si le tag RFID existe déjà en base de donnée, dans ce cas l'API renvoie une erreur de type 400",
+     *     tags={"paybeer"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/x-www-form-urlencoded",
@@ -190,6 +194,7 @@ class ApiController extends AbstractController {
      *         description="Si le tag RFID existe déjà en base de donnée ou que les paramètres sont incorrects",
      *         @OA\JsonContent(ref="#/components/schemas/Error")
      *     ),
+     *     security={"jwt": {}}
      * )
      */
     public function newUser(Request $request): Response {

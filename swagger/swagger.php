@@ -6,19 +6,26 @@ use OpenApi\Annotations as OA;
  * @OA\Info(
  *     title="PayBeer API",
  *     version="0.1",
- *     description="API pour le système de prépaiement du ChillOut"
+ *     description="API pour le système de prépaiement du ChillOut",
  * )
+ *
  * @OA\Server(
  *     url="https://paybeer.artefactori.ch/api",
- *     description="Serveur principal de pré-production"
+ *     description="Serveur principal de pré-production",
  * )
+ *
+ * @OA\Tag(
+ *     name="paybeer",
+ *     description="Routes de base pour la communication avec les terminaux de paiement"
+ * )
+ *
  *
  * @OA\SecurityScheme(
  *     type="http",
  *     scheme="bearer",
  *     bearerFormat="JWT",
- *     securityScheme="bearerAuth",
- *     description="Les JSON Web Tokens sont utilisés pour authoriser l'API"
+ *     securityScheme="jwt",
+ *     description="Les JSON Web Tokens sont utilisés pour authoriser l'API. On peut en récupéré un grâce à la route /login."
  * )
  *
  * @OA\Response(
