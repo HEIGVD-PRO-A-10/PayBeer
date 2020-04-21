@@ -53,13 +53,11 @@
                                 "schema": {
                                     "properties": {
                                         "token": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImF1ZCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGkiLCJpYXQiOjE1ODc0NjQ3MjAsImV4cCI6MTU4NzQ2ODMyMH0.Dg4YTnlQnESWNzKs25dajb8_XMQdeAfkxMM62RjjlHE"
                                         }
                                     },
                                     "type": "object"
-                                },
-                                "example": {
-                                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImF1ZCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGkiLCJpYXQiOjE1ODc0NjQ3MjAsImV4cCI6MTU4NzQ2ODMyMH0.Dg4YTnlQnESWNzKs25dajb8_XMQdeAfkxMM62RjjlHE"
                                 }
                             }
                         }

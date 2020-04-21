@@ -9,6 +9,7 @@ use OpenApi\Annotations as OA;
  *     description="API pour le système de prépaiement du ChillOut",
  * )
  *
+ *
  * @OA\Server(
  *     url="https://paybeer.artefactori.ch/api",
  *     description="Serveur principal de pré-production",

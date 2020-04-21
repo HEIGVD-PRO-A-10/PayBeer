@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Admin;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Repository\AdminRepository;
@@ -38,6 +39,10 @@ class ApiController extends AbstractController {
 
     /**
      * @Route("/login", name="login", methods={"POST"})
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param AdminRepository $adminRepository
+     * @return Response
      *
      * @OA\Post(
      *     path="/login",
@@ -60,8 +65,7 @@ class ApiController extends AbstractController {
      *         description="Token JWT",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="token", type="string"),
-     *             example={"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImF1ZCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGkiLCJpYXQiOjE1ODc0NjQ3MjAsImV4cCI6MTU4NzQ2ODMyMH0.Dg4YTnlQnESWNzKs25dajb8_XMQdeAfkxMM62RjjlHE"}
+     *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImF1ZCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGkiLCJpYXQiOjE1ODc0NjQ3MjAsImV4cCI6MTU4NzQ2ODMyMH0.Dg4YTnlQnESWNzKs25dajb8_XMQdeAfkxMM62RjjlHE"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -80,7 +84,7 @@ class ApiController extends AbstractController {
             if ($user) {
                 $admin = $adminRepository->find($user->getId());
                 if ($admin) {
-                    if($admin->getPinTerminal() == $pinNumber) {
+                    if ($admin->getPinTerminal() == $pinNumber) {
                         // Génération du token
                         $time = time();
                         $signer = new Sha256();
@@ -88,6 +92,7 @@ class ApiController extends AbstractController {
                             ->permittedFor($request->getUriForPath('/api'))
                             ->issuedAt($time)
                             ->expiresAt($time + 3600)
+                            ->withClaim('admin_id', $admin->getUser()->getId())
                             ->getToken($signer, new Key($_ENV['JWT_SECRET']));
                         return new JsonResponse(['token' => (string)$token]);
                     } else {
@@ -148,8 +153,8 @@ class ApiController extends AbstractController {
      * )
      */
     public function transaction(Request $request, UserRepository $userRepository, AdminRepository $adminRepository): Response {
-        if ($this->authorize($request)) {
-            return $this->doTransaction($request, $userRepository, $adminRepository);
+        if ($adminId = $this->authorize($request)) {
+            return $this->doTransaction($request, $adminId, $userRepository, $adminRepository);
         } else {
             $response = new JsonResponse(['code' => 'error', 'message' => "Accès non-autorisé"]);
             $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
@@ -164,7 +169,7 @@ class ApiController extends AbstractController {
      *
      * @OA\Post(
      *     path="/new-user",
-     *     summary="Ajoute un nouvelle utilisateur",
+     *     summary="Ajoute un nouvel utilisateur",
      *     description="Si le tag RFID existe déjà en base de donnée, dans ce cas l'API renvoie une erreur de type 400",
      *     tags={"paybeer"},
      *     @OA\RequestBody(
@@ -206,7 +211,7 @@ class ApiController extends AbstractController {
                     $user = new User();
                     $user
                         ->setTagRfid($tagRfid)
-                        ->setStatus('new');
+                        ->setStatus('NEW');
 
                     $entityManager->persist($user);
                     $entityManager->flush();
@@ -231,19 +236,29 @@ class ApiController extends AbstractController {
         }
     }
 
-    private function authorize(Request $request): bool {
+    private function authorize(Request $request) {
         $signer = new Sha256();
         $token = $request->headers->get('Authorization');
         $token = explode(' ', $token);
-        if(isset($token[1])) {
+        if (isset($token[1])) {
             $token = $token[1];
             try {
                 $token = (new Parser())->parse((string)$token);
-                if ($token->verify($signer, $_ENV['JWT_SECRET']) && $token->hasClaim('exp') && $token->hasClaim('iss') && $token->hasClaim('aud')) {
+                if (
+                    $token->verify($signer, $_ENV['JWT_SECRET']) &&
+                    $token->hasClaim('exp') &&
+                    $token->hasClaim('iss') &&
+                    $token->hasClaim('aud') &&
+                    $token->hasClaim('admin_id')
+                ) {
                     $data = new ValidationData();
                     $data->setIssuer($request->getUriForPath('/api/login'));
                     $data->setAudience($request->getUriForPath('/api'));
-                    return $token->validate($data);
+                    if($token->validate($data)) {
+                        return $token->getClaim('admin_id');
+                    } else {
+                        return false;
+                    }
                 }
             } catch (Exception $e) {
                 return false;
@@ -252,41 +267,42 @@ class ApiController extends AbstractController {
         return false;
     }
 
-    private function doTransaction(Request $request, UserRepository $userRepository, AdminRepository $adminRepository): Response {
+    private function doTransaction(Request $request, int $adminId, UserRepository $userRepository, AdminRepository $adminRepository): Response {
         $entityManager = $this->getDoctrine()->getManager();
 
         $tagRfid = $request->request->get('tag_rfid');
         $amount = $request->request->get('amount');
 
-        // TODO récupérer l'ID dans le token JWT
-        $admin = $adminRepository->findAll()[0];
+        $admin = $adminRepository->find($adminId);
 
-        if (!empty($tagRfid) && !empty($amount) && is_numeric($amount)) {
+        if (!empty($tagRfid) && !empty($amount) && is_numeric($amount) && $admin) {
             $user = $userRepository->findOneBy(['tag_rfid' => $tagRfid]);
             if ($user) {
-                $transaction = new Transaction();
-                $transaction->setAmount($amount);
-                $transaction->setDate(new DateTime());
-                $transaction->setNumTerminal(1);
-                $transaction->setUser($user);
-                $transaction->setAdmin($admin);
+                if($user->getStatus() === 'ACTIVE') {
+                    $transaction = new Transaction();
+                    $transaction->setAmount($amount);
+                    $transaction->setDate(new DateTime());
+                    $transaction->setNumTerminal(1);
+                    $transaction->setUser($user);
+                    $transaction->setAdmin($admin);
 
-                $entityManager->persist($transaction);
-                $entityManager->flush();
+                    $entityManager->persist($transaction);
+                    $entityManager->flush();
 
-                $response = new JsonResponse(['code' => 'success', 'message' => "Transaction effctuée avec succès"]);
-                $response->setStatusCode(Response::HTTP_CREATED);
-                return $response;
+                    $response = new JsonResponse(['code' => 'success', 'message' => "Transaction effctuée avec succès"]);
+                    $response->setStatusCode(Response::HTTP_CREATED);
+                    return $response;
+                } else {
+                    $message = "L'utilisateur avec le tag RFID $tagRfid n'est pas actif";
+                }
             } else {
-                // User not found
-                $response = new JsonResponse(['code' => 'error', 'message' => "L'utilisateur avec le tag RFID $tagRfid est introuvable"]);
-                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-                return $response;
+                $message = "L'utilisateur avec le tag RFID $tagRfid est introuvable";
             }
         } else {
-            $response = new JsonResponse(['code' => 'error', 'message' => "Paramètres incorrectes"]);
-            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-            return $response;
+            $message = "Paramètres incorrectes";
         }
+        $response = new JsonResponse(['code' => 'error', 'message' => $message]);
+        $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+        return $response;
     }
 }
