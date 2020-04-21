@@ -36,7 +36,9 @@ class HomeController extends AbstractController
             'overdraftUsers' => array_slice($overdraftUsers, 0, 5),
             'transactions' => array_slice($transactions, 0, 5),
             'lastUsers' => array_slice($users, 0, 5),
-            'admins' => $admins
+            'admins' => $admins,
+            'rfid_test' => $admins[0]->getUser()->getTagRfid(),
+            'pin_test' => $admins[0]->getPinTerminal(),
         ]);
     }
 }

@@ -100,6 +100,20 @@
                 </div>
             </div>
         </div>
+        <div class="card border-warning">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fa fa-key"></i> Identifiant de test pour l'API</h5>
+                <div class="card-text">
+                    <div class="row">
+                        <dt class="col-6">Tag RFID</dt>
+                        <dd class="col-6">{{ rfid_test }}</dd>
+                        <dt class="col-6">PIN number</dt>
+                        <dd class="col-6">{{ pin_test }}</dd>
+                    </div>
+                    <p class="mt-2">L'API est documentée <a href="{{ path('api_docs') }}index.html" target="_blank">ici <i class="fa fa-book"></i></a>.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

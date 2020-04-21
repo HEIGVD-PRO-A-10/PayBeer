@@ -5,8 +5,12 @@ namespace App\Controller\Api;
 use App\Entity\Admin;
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Kernel;
+use App\Repository\AdminRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use Exception;
+use http\Env;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -30,7 +34,7 @@ use OpenApi\Annotations as OA;
 class ApiController extends AbstractController {
 
     /**
-     * @Route("/", name="index")
+     * @Route("/", name="docs")
      */
     public function index() {
         return $this->redirect('/api/index.html', Response::HTTP_MOVED_PERMANENTLY);
@@ -70,15 +74,37 @@ class ApiController extends AbstractController {
      *     ),
      * )
      */
-    public function login(): Response {
-        $time = time();
-        $signer = new Sha256();
-        $token = (new Builder())->issuedBy('http://localhost:8000/api/login')
-            ->permittedFor('http://localhost:8000/api')
-            ->issuedAt($time)
-            ->expiresAt($time + 3600)
-            ->getToken($signer, new Key('test'));
-        return new JsonResponse(['token' => (string)$token]);
+    public function login(Request $request, UserRepository $userRepository, AdminRepository $adminRepository): Response {
+        if (($tagRFID = $request->request->get('tag_rfid')) && ($pinNumber = $request->request->get('pin_number'))) {
+            $user = $userRepository->findOneBy(['tag_rfid' => $tagRFID]);
+            if ($user) {
+                $admin = $adminRepository->find($user->getId());
+                if ($admin) {
+                    if($admin->getPinTerminal() == $pinNumber) {
+                        // Génération du token
+                        $time = time();
+                        $signer = new Sha256();
+                        $token = (new Builder())->issuedBy($request->getUri())
+                            ->permittedFor($request->getUriForPath('/api'))
+                            ->issuedAt($time)
+                            ->expiresAt($time + 3600)
+                            ->getToken($signer, new Key($_ENV['JWT_SECRET']));
+                        return new JsonResponse(['token' => (string)$token]);
+                    } else {
+                        $response = new JsonResponse(['code' => 'error', 'message' => "PIN incorrect"]);
+                        $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                        return $response;
+                    }
+                }
+            }
+            $response = new JsonResponse(['code' => 'error', 'message' => "Utilisateur introuvable"]);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $response;
+        } else {
+            $response = new JsonResponse(['code' => 'error', 'message' => "Paramètres incorrectes"]);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $response;
+        }
     }
 
     /**

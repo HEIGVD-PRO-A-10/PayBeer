@@ -47,6 +47,7 @@ class AppFixtures extends Fixture {
             $admin = new Admin();
             $admin->setUser($user);
             $admin->setEmail($userdata[2]);
+            $admin->setPinTerminal((string)$this->faker->randomNumber(5));
             $admin->setPassword($this->passwordEncoder->encodePassword(
                 $admin,
                 '1234'
