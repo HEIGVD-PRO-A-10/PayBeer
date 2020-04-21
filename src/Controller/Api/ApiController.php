@@ -18,33 +18,66 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use OpenApi\Annotations as OA;
+
+
 /**
  * Class ApiController
  * @package App\Controller
  *
  * @Route("/api", name="api_")
  */
-class ApiController extends AbstractController
-{
+class ApiController extends AbstractController {
 
     /**
      * @Route("/", name="index")
      */
-    public function index(): Response {
-        return new JsonResponse(['api_version' => '0.0.1']);
+    public function index() {
+        return $this->redirect('/api/index.html', Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/login", name="login", methods={"POST"})
+     *
+     * @OA\Post(
+     *     path="/login",
+     *     summary="Authentification à l'API",
+     *     description="Il est nécessaire d'appeler cette route afin de s'authentifier à l'API. Celle-ci renvoie un token JWT en cas de succès. Ce token est valable 1 heure par défaut.",
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(property="tag_rfid", type="string", description="Tag RFID", example="123456"),
+     *                 @OA\Property(property="pin_number", type="string", description="Numéro d'identification personnel", example="32164"),
+     *                 required={"tag_rfid", "pin_number"}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Token JWT",
+     *         @OA\JsonContent(
+     *             type="string",
+     *             description="Token JWT",
+     *             example={"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImF1ZCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGkiLCJpYXQiOjE1ODc0NjQ3MjAsImV4cCI6MTU4NzQ2ODMyMH0.Dg4YTnlQnESWNzKs25dajb8_XMQdeAfkxMM62RjjlHE"}
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Paramètres incorrectes",
+     *         ref="#/components/responses/unauthorized"
+     *     ),
+     * )
      */
     public function login(): Response {
         $time = time();
         $signer = new Sha256();
         $token = (new Builder())->issuedBy('http://localhost:8000/api/login')
-        ->permittedFor('http://localhost:8000/api')
-        ->issuedAt($time)
-        ->expiresAt($time + 3600)
-        ->getToken($signer, new Key('test'));
+            ->permittedFor('http://localhost:8000/api')
+            ->issuedAt($time)
+            ->expiresAt($time + 3600)
+            ->getToken($signer, new Key('test'));
         return new JsonResponse(['token' => (string)$token]);
     }
 
@@ -130,7 +163,7 @@ class ApiController extends AbstractController
         $signer = new Sha256();
         $token = $request->headers->get('Authorization');
         $token = explode(' ', $token)[1];
-        $token = (new Parser())->parse((string) $token);
+        $token = (new Parser())->parse((string)$token);
         // TODO: Changer la clé secrète 'test'
         if ($token->verify($signer, 'test') && $token->hasClaim('exp') && $token->hasClaim('iss') && $token->hasClaim('aud')) {
             $data = new ValidationData();

@@ -1,0 +1,107 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "PayBeer API",
+        "description": "API pour le système de prépaiement du ChillOut",
+        "version": "0.1"
+    },
+    "servers": [
+        {
+            "url": "https://paybeer.artefactori.ch/api",
+            "description": "Serveur principal de pré-production"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "summary": "Authentification à l'API",
+                "description": "Il est nécessaire d'appeler cette route afin de s'authentifier à l'API. Celle-ci renvoie un token JWT en cas de succès. Ce token est valable 1 heure par défaut.",
+                "operationId": "App\\Controller\\Api\\ApiController::login",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "required": [
+                                    "tag_rfid",
+                                    "pin_number"
+                                ],
+                                "properties": {
+                                    "tag_rfid": {
+                                        "description": "Tag RFID",
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "pin_number": {
+                                        "description": "Numéro d'identification personnel",
+                                        "type": "string",
+                                        "example": "32164"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token JWT",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Token JWT",
+                                    "type": "string"
+                                },
+                                "example": {
+                                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImF1ZCI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4MDAwXC9hcGkiLCJpYXQiOjE1ODc0NjQ3MjAsImV4cCI6MTU4NzQ2ODMyMH0.Dg4YTnlQnESWNzKs25dajb8_XMQdeAfkxMM62RjjlHE"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Paramètres incorrectes",
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Error": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "unauthorized": {
+                "description": "Non-authorisé",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Les JSON Web Tokens sont utilisés pour authoriser l'API",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

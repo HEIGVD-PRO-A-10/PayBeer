@@ -41,3 +41,7 @@ fixtures: ## Rempli la base de donnée avec de fausses données
 .PHONY: mysql
 mysql: ## MySQL en ligne de commande
 	$(de) db mysql -uroot -proot
+
+.PHONY: api
+api: ## Génére la documentation de l'API
+	vendor/bin/openapi --format json --output ./public/api/api.json ./swagger/swagger.php src
