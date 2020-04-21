@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+    <h1>
+        <i class="fa fa-edit"></i>
+        Transaction #{{ transaction.id }}
+    </h1>
+    <hr>
+    {% if transaction.status == 'CANCELED' %}
+        <div class="alert alert-warning" role="alert">
+            <strong><i class="fa fa-exclamation-triangle"></i> Cette transaction est annulée.</strong> Elle n'est
+            pas prise en compte dans les calculs des soldes mais reste présente dans la base de données.
+        </div>
+    {% endif %}
+    <form method="post" class="needs-validation" novalidate>
+        <div class="form-group row">
+            <label class="col-3 col-form-label" for="user">Client</label>
+            <div class="col-9">
+                <input type="text" class="form-control" id="user"
+                       value="{{ transaction.user.firstname }} {{ transaction.user.lastname }}" readonly disabled>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label" for="amount">Montant</label>
+            <div class="col-9">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Montant de la transaction" name="amount"
+                           id="amount"
+                           value="{{ transaction.amount }}" aria-label="Montant de la transaction"
+                           aria-describedby="basic-addon2" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">CHF</span>
+                    </div>
+                    <div class="invalid-feedback">
+                        Le montant est requis.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit"><i class="fa fa-edit"></i> Modifier</button>
+        <a href="{{ referer }}" class="btn btn-outline-secondary">Annuler</a>
+    </form>
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+{% endblock %}
+

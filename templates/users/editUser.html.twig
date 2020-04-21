@@ -10,6 +10,11 @@
         {% endif %}
     </h1>
     <hr>
+    {% if user.status == 'BLOCKED' %}
+        <div class="alert alert-warning" role="alert">
+            <strong><i class="fa fa-exclamation-triangle"></i> Ce compte est actuellement bloqué !</strong>
+        </div>
+    {% endif %}
     <form method="post" class="needs-validation" novalidate>
         <div class="form-row">
             <div class="col-sm-6 mb-3">
@@ -29,12 +34,6 @@
                 </div>
             </div>
         </div>
-        {% if user.status == 'BLOCKED' %}
-            <div class="alert alert-warning" role="alert">
-                <strong><i class="fa fa-exclamation-triangle"></i> Attention:</strong> Le compte
-                de {{ user.firstname }} {{ user.lastname }} est actuellement bloqué !
-            </div>
-        {% endif %}
         <button class="btn btn-primary" type="submit"><i class="fa fa-edit"></i> Modifier</button>
         <a href="{{ referer }}" class="btn btn-outline-secondary">Annuler</a>
     </form>

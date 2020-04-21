@@ -46,7 +46,7 @@
                     <td>
                         <a href="{{ path('transaction_info', {id: transaction.id}) }}"
                            class="btn btn-sm btn-outline-primary"><i class="fa fa-eye"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-info d-none d-sm-inline"><i
+                        <a href="{{ path('transaction_edit', {id: transaction.id}) }}" class="btn btn-sm btn-outline-info d-none d-sm-inline"><i
                                     class="fa fa-pencil-alt"></i></a>
                         {% if transaction.status == 'CANCELED' %}
                             <a href="{{ path('transaction_maintain', {id: transaction.id}) }}" class="btn btn-sm btn-outline-success d-none d-md-inline"><i

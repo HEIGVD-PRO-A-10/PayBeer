@@ -7,11 +7,12 @@
     </h1>
     <hr>
     {% if transaction.status == 'CANCELED' %}
-        <div class="alert alert-warning">
-            <strong>Cette transaction est annulée.</strong> Elle n'est pas prise en compte dans les calculs des soldes mais reste présente dans la base de données.
+        <div class="alert alert-warning" role="alert">
+            <strong><i class="fa fa-exclamation-triangle"></i> Cette transaction est annulée.</strong> Elle n'est
+            pas prise en compte dans les calculs des soldes mais reste présente dans la base de données.
         </div>
     {% endif %}
-    <a href="#" class="btn btn-primary"><i class="fa fa-edit"></i> Éditer</a>
+    <a href="{{ path('transaction_edit', {id: transaction.id}) }}" class="btn btn-primary"><i class="fa fa-edit"></i> Éditer</a>
     {% if transaction.status == 'CANCELED' %}
         <a href="{{ path('transaction_maintain', {id: transaction.id}) }}" class="btn btn-outline-success">
             <i class="fa fa-check"></i>

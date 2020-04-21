@@ -10,6 +10,11 @@
         {% endif %}
     </h1>
     <hr>
+    {% if user.status == 'BLOCKED' %}
+        <div class="alert alert-warning" role="alert">
+            <strong><i class="fa fa-exclamation-triangle"></i> Ce compte est actuellement bloqué !</strong>
+        </div>
+    {% endif %}
     <a href="{{ path('user_edit', {userID: user.id}) }}" class="btn btn-primary"><i class="fa fa-edit"></i> Éditer</a>
     <a href="{{ path('user_delete', {userID: user.id}) }}" class="btn btn-outline-danger"
        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréverible.')"><i
@@ -91,7 +96,7 @@
                     <td>{{ transaction.amount }} CHF</td>
                     <td>{{ transaction.date|date('d.m.Y H:i') }}</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-outline-info d-none d-sm-inline"><i
+                        <a href="{{ path('transaction_edit', {id: transaction.id}) }}" class="btn btn-sm btn-outline-info d-none d-sm-inline"><i
                                     class="fa fa-pencil-alt"></i></a>
                         {% if transaction.status == 'CANCELED' %}
                             <a href="{{ path('transaction_maintain', {id: transaction.id}) }}" class="btn btn-sm btn-outline-success d-none d-md-inline"><i
