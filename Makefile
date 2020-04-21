@@ -45,3 +45,7 @@ mysql: ## MySQL en ligne de commande
 .PHONY: api
 api: ## Génére la documentation de l'API
 	vendor/bin/openapi --format json --output ./public/api/api.json ./swagger/swagger.php src
+
+.PHONY: deploy
+deploy:
+	$(de) php dep deploy

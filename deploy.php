@@ -28,7 +28,7 @@ host('4d30w.ftp.infomaniak.com')
 
 desc('Composer install dependencies');
 task('deploy:vendors', function () {
-    run('cd {{release_path}} && {{bin/composer}} install --optimize-autoloader');
+    run('cd {{release_path}} && {{bin/composer}} install');
 });
 
 desc('Migrate database');
