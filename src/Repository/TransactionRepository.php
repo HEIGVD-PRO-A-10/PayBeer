@@ -47,4 +47,14 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findAllSorted() {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT t.*, u.id AS user_id, u.firstname, u.lastname
+                FROM transaction t
+                    INNER JOIN user u ON t.user_id = u.id
+                ORDER BY t.date DESC';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

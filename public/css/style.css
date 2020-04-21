@@ -1,0 +1,7 @@
+.striked td {
+    text-decoration: line-through;
+}
+
+.striked td:last-child {
+    text-decoration: none;
+}

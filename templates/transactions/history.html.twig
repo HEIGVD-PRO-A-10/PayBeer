@@ -1,7 +1,7 @@
 {% extends "layout.html.twig" %}
 
 {% block main %}
-    <h1><i class="fa fa-tags"></i> Transations</h1>
+    <h1><i class="fa fa-tags"></i> Transactions</h1>
     <hr>
     <form method="get">
         <div class="form-group">
@@ -25,17 +25,37 @@
         <table class="table">
             <thead>
             <tr>
+                <th class="d-none d-md-table-cell">ID</th>
                 <th>Utilisateur</th>
                 <th>Montant</th>
                 <th>Date</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             {% for transaction in transactions %}
-                <tr>
-                    <td><a href="{{ path('user_info', {userID: transaction.user.id}) }}">{{ transaction.user.firstname }} {{ transaction.user.lastname }}</a></td>
-                    <td>{{ transaction.amount }} CHF</td>
-                    <td>{{ transaction.date|date('d.m.Y H:i') }}</td>
+                <tr class="{{ transaction.status == 'CANCELED' ? 'striked table-warning' }}">
+                    <td class="d-none d-md-table-cell"><a
+                                href="{{ path('transaction_info', {id: transaction.id}) }}">{{ transaction.id }}</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('user_info', {userID: transaction.user_id}) }}">{{ transaction.firstname }} {{ transaction.lastname }}</a>
+                    </td>
+                    <td>{{ transaction.amount }}<span class="d-none d-sm-inline"> CHF</span></td>
+                    <td>{{ transaction.date|date('d.m.y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('transaction_info', {id: transaction.id}) }}"
+                           class="btn btn-sm btn-outline-primary"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-info d-none d-sm-inline"><i
+                                    class="fa fa-pencil-alt"></i></a>
+                        {% if transaction.status == 'CANCELED' %}
+                            <a href="{{ path('transaction_maintain', {id: transaction.id}) }}" class="btn btn-sm btn-outline-success d-none d-md-inline"><i
+                                        class="fa fa-check"></i></a>
+                        {% else %}
+                            <a href="{{ path('transaction_cancel', {id: transaction.id}) }}" class="btn btn-sm btn-outline-danger d-none d-md-inline"><i
+                                        class="fa fa-minus-circle"></i></a>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

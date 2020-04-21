@@ -1,0 +1,45 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+    <h1>
+        <i class="fa fa-tag"></i>
+        Transaction #{{ transaction.id }}
+    </h1>
+    <hr>
+    {% if transaction.status == 'CANCELED' %}
+        <div class="alert alert-warning">
+            <strong>Cette transaction est annulée.</strong> Elle n'est pas prise en compte dans les calculs des soldes mais reste présente dans la base de données.
+        </div>
+    {% endif %}
+    <a href="#" class="btn btn-primary"><i class="fa fa-edit"></i> Éditer</a>
+    {% if transaction.status == 'CANCELED' %}
+        <a href="{{ path('transaction_maintain', {id: transaction.id}) }}" class="btn btn-outline-success">
+            <i class="fa fa-check"></i>
+            Maintenir la transaction
+        </a>
+    {% else %}
+        <a href="{{ path('transaction_cancel', {id: transaction.id}) }}" class="btn btn-outline-danger">
+            <i class="fa fa-minus-circle"></i>
+            Annuler la transaction
+        </a>
+    {% endif %}
+    <dl class="row mt-4">
+        <dt class="col-4">Client</dt>
+        <dd class="col-8">{{ transaction.user.firstname }} {{ transaction.user.lastname }}</dd>
+
+        <dt class="col-4">Admin</dt>
+        <dd class="col-8">{{ transaction.admin.user.firstname }} {{ transaction.admin.user.lastname }}</dd>
+
+        <dt class="col-4">Date</dt>
+        <dd class="col-8">{{ transaction.date|date('d.m.Y H:i') }}</dd>
+
+        <dt class="col-4">Montant</dt>
+        <dd class="col-8">{{ transaction.amount }} CHF <i
+                    class="fa fa-arrow-{{ transaction.amount > 0 ? 'up' : 'down' }} {{ transaction.amount > 0 ? 'text-success' : 'text-danger' }}"></i>
+        </dd>
+
+        <dt class="col-4">Numéro du terminal</dt>
+        <dd class="col-8">N°{{ transaction.numTerminal }}</dd>
+    </dl>
+{% endblock %}
+

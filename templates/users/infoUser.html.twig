@@ -86,13 +86,20 @@
             </thead>
             <tbody>
             {% for transaction in user.transactions %}
-                <tr>
-                    <td><a href="#">{{ transaction.id }}</a></td>
+                <tr class="{{ transaction.status == 'CANCELED' ? 'striked table-warning' }}">
+                    <td><a href="{{ path('transaction_info', {id: transaction.id}) }}">{{ transaction.id }}</a></td>
                     <td>{{ transaction.amount }} CHF</td>
                     <td>{{ transaction.date|date('d.m.Y H:i') }}</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-outline-info"><i class="fa fa-pencil-alt"></i></a>
-                        <a href="#" class="btn btn-sm btn-outline-danger"><i class="fa fa-minus-circle"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-info d-none d-sm-inline"><i
+                                    class="fa fa-pencil-alt"></i></a>
+                        {% if transaction.status == 'CANCELED' %}
+                            <a href="{{ path('transaction_maintain', {id: transaction.id}) }}" class="btn btn-sm btn-outline-success d-none d-md-inline"><i
+                                        class="fa fa-check"></i></a>
+                        {% else %}
+                            <a href="{{ path('transaction_cancel', {id: transaction.id}) }}" class="btn btn-sm btn-outline-danger d-none d-md-inline"><i
+                                        class="fa fa-minus-circle"></i></a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

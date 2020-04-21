@@ -26,15 +26,13 @@
             <thead>
             <tr>
                 <th>Nom</th>
-                <th>Prénom</th>
                 <th>Statut</th>
             </tr>
             </thead>
             <tbody>
             {% for user in users %}
                 <tr>
-                    <td><a href="{{ path('user_info', {userID: user.id}) }}">{{ user.lastname }}</a></td>
-                    <td>{{ user.firstname }}</td>
+                    <td><a href="{{ path('user_info', {userID: user.id}) }}">{{ user.firstname }} {{ user.lastname }}</a></td>
                     {% if user.status == 'ACTIVE' %}
                         <td><i class="fa fa-check text-success"></i></td>
                     {% elseif user.status == 'NEW' %}
