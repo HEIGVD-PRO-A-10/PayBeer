@@ -99,7 +99,7 @@
                                     },
                                     "amount": {
                                         "description": "Montant de la transaction (positif ou négatif)",
-                                        "type": "string",
+                                        "type": "integer",
                                         "example": "15"
                                     },
                                     "num_terminal": {
@@ -109,7 +109,7 @@
                                         "example": "1"
                                     },
                                     "admin_id": {
-                                        "description": "Identifiant de l'administrateur ayant effectuer la transaction",
+                                        "description": "Identifiant de l'administrateur ayant effectué la transaction",
                                         "type": "integer",
                                         "example": "123"
                                     }
@@ -130,9 +130,11 @@
                         "$ref": "#/components/responses/bad_request"
                     }
                 },
-                "security": {
-                    "jwt": []
-                }
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
             }
         },
         "/new-user": {
@@ -180,9 +182,11 @@
                         }
                     }
                 },
-                "security": {
-                    "jwt": []
-                }
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
             }
         }
     },

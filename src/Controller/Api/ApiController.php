@@ -2,27 +2,23 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Admin;
 use App\Entity\Transaction;
 use App\Entity\User;
-use App\Kernel;
 use App\Repository\AdminRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Exception;
-use http\Env;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\ValidationData;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-use OpenApi\Annotations as OA;
 
 
 /**
@@ -129,9 +125,9 @@ class ApiController extends AbstractController {
      *             @OA\Schema(
      *                 type="object",
      *                 @OA\Property(property="tag_rfid", type="string", description="Tag RFID", example="123456"),
-     *                 @OA\Property(property="amount", type="string", description="Montant de la transaction (positif ou négatif)", example="15"),
+     *                 @OA\Property(property="amount", type="integer", description="Montant de la transaction (positif ou négatif)", example="15"),
      *                 @OA\Property(property="num_terminal", type="integer", description="Numéro du terminal utilisé pour effectuer la transaction", default="1", example="1"),
-     *                 @OA\Property(property="admin_id", type="integer", description="Identifiant de l'administrateur ayant effectuer la transaction", example="123"),
+     *                 @OA\Property(property="admin_id", type="integer", description="Identifiant de l'administrateur ayant effectué la transaction", example="123"),
      *                 required={"tag_rfid", "amount", "num_terminal", "admin_id"},
      *             )
      *         )
@@ -148,7 +144,7 @@ class ApiController extends AbstractController {
      *         response="400",
      *         ref="#/components/responses/bad_request"
      *     ),
-     *     security={"jwt": {}}
+     *     security={{"jwt": {}}}
      * )
      */
     public function transaction(Request $request, UserRepository $userRepository, AdminRepository $adminRepository): Response {
@@ -194,7 +190,7 @@ class ApiController extends AbstractController {
      *         description="Si le tag RFID existe déjà en base de donnée ou que les paramètres sont incorrects",
      *         @OA\JsonContent(ref="#/components/schemas/Error")
      *     ),
-     *     security={"jwt": {}}
+     *     security={{"jwt": {}}}
      * )
      */
     public function newUser(Request $request): Response {
