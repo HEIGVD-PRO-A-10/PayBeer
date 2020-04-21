@@ -17,11 +17,20 @@
                 <div class="card-text">
                     <div class="row">
                         {% for user in overdraftUsers %}
-                            <dt class="col-6"><a href="{{ path('user_info', {userID: user.id}) }}">{{ user.firstname }} {{ user.lastname }}</a></dt>
+                            <dt class="col-6"><a
+                                        href="{{ path('user_info', {userID: user.id}) }}">{{ user.firstname }} {{ user.lastname }}</a>
+                            </dt>
                             <dd class="col-6">{{ user.balance }} CHF</dd>
                         {% endfor %}
                     </div>
-                    <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
+                    {% if overdraftUsers|length > 0 %}
+                        <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
+                        {% else %}
+                        <div class="text-center text-muted">
+                            <i class="fa fa-smile mt-1" style="font-size: 3rem"></i>
+                            <p class="mt-3 mb-0"><i>Aucun utilisateur à découvert.</i></p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -43,7 +52,14 @@
                             <dd class="col-6">{{ user.createdAt|date('d.m.Y') }}</dd>
                         {% endfor %}
                     </div>
-                    <p class="text-center" style="margin: 0;"><a href="{{ path('user_list_new') }}">Voir plus ...</a>
+                    {% if lastUsers|length > 0 %}
+                        <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
+                    {% else %}
+                        <div class="text-center text-muted">
+                            <i class="fa fa-smile mt-1" style="font-size: 3rem"></i>
+                            <p class="mt-3 mb-0"><i>Les derniers utilisateurs s'afficheront ici.</i></p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -59,7 +75,14 @@
                             <dd class="col-6">{{ transaction.amount }} CHF</dd>
                         {% endfor %}
                     </div>
-                    <p class="text-center" style="margin: 0;"><a href="{{ path('history') }}">Voir plus ...</a></p>
+                    {% if transactions|length > 0 %}
+                        <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
+                    {% else %}
+                        <div class="text-center text-muted">
+                            <i class="fa fa-smile mt-1" style="font-size: 3rem"></i>
+                            <p class="mt-3 mb-0"><i>Les dernières transactions s'afficherons ici.</i></p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -74,7 +97,14 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
+                    {% if blockedUsers|length > 0 %}
+                        <p class="text-center" style="margin: 0;"><a href="#">Voir plus ...</a></p>
+                    {% else %}
+                        <div class="text-center text-muted">
+                            <i class="fa fa-smile mt-1" style="font-size: 3rem"></i>
+                            <p class="mt-3 mb-0"><i>Les comptes bloqués s'afficherons ici.</i></p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -110,7 +140,8 @@
                         <dt class="col-6">PIN number</dt>
                         <dd class="col-6">{{ pin_test }}</dd>
                     </div>
-                    <p class="mt-2">L'API est documentée <a href="{{ path('api_docs') }}index.html" target="_blank">ici <i class="fa fa-book"></i></a>.</p>
+                    <p class="mt-2">L'API est documentée <a href="{{ path('api_docs') }}index.html" target="_blank">ici
+                            <i class="fa fa-book"></i></a>.</p>
                 </div>
             </div>
         </div>

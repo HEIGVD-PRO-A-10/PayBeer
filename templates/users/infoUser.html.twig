@@ -72,7 +72,7 @@
                 </div>
                 {% if query is defined %}
                     <div class="input-group-append">
-                        <a class="btn btn-outline-danger" href="{{ path('list_user') }}"><i class="fa fa-filter"></i>
+                        <a class="btn btn-outline-danger" href="{{ path('user_info', {userID: user.id}) }}"><i class="fa fa-filter"></i>
                             Clear</a>
                     </div>
                 {% endif %}

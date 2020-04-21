@@ -26,7 +26,7 @@
     {% endif %}
     <dl class="row mt-4">
         <dt class="col-4">Client</dt>
-        <dd class="col-8">{{ transaction.user.firstname }} {{ transaction.user.lastname }}</dd>
+        <dd class="col-8"><a href="{{ path('user_info', {userID: transaction.user.id}) }}">{{ transaction.user.firstname }} {{ transaction.user.lastname }}</a></dd>
 
         <dt class="col-4">Admin</dt>
         <dd class="col-8">{{ transaction.admin.user.firstname }} {{ transaction.admin.user.lastname }}</dd>

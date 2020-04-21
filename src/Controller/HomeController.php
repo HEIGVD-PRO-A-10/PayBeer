@@ -20,7 +20,7 @@ class HomeController extends AbstractController
      */
     public function index(TransactionRepository $transactionRepository, UserRepository $userRepository, AdminRepository $adminRepository)
     {
-        $transactions = $transactionRepository->findBy([], ['date' => 'DESC']);
+        $transactions = $transactionRepository->findAllNonCanceled();
         $balance = 0;
         foreach ($transactions as $transaction) {
             $balance += $transaction->getAmount();

@@ -46,6 +46,7 @@ class UserRepository extends ServiceEntityRepository {
         $sql = 'SELECT u.*, SUM(t.amount) AS "balance"
                 FROM transaction t
                     INNER JOIN user u ON t.user_id = u.id
+                WHERE t.status != \'CANCELED\' OR t.status IS NULL
                 GROUP BY u.id
                 HAVING SUM(t.amount) < 0
                 ORDER BY SUM(t.amount);';

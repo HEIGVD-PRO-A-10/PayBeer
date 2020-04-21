@@ -57,4 +57,13 @@ class TransactionRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function findAllNonCanceled() {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.status != \'CANCELED\'')
+            ->orWhere('t.status IS NULL')
+            ->orderBy('t.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
