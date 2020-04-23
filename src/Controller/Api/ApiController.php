@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Admin;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Repository\AdminRepository;
@@ -132,7 +131,6 @@ class ApiController extends AbstractController {
      *                 @OA\Property(property="tag_rfid", type="string", description="Tag RFID", example="123456"),
      *                 @OA\Property(property="amount", type="integer", description="Montant de la transaction (positif ou négatif)", example="15"),
      *                 @OA\Property(property="num_terminal", type="integer", description="Numéro du terminal utilisé pour effectuer la transaction", default="1", example="1"),
-     *                 @OA\Property(property="admin_id", type="integer", description="Identifiant de l'administrateur ayant effectué la transaction", example="123"),
      *                 required={"tag_rfid", "amount", "num_terminal", "admin_id"},
      *             )
      *         )
@@ -279,21 +277,30 @@ class ApiController extends AbstractController {
             $user = $userRepository->findOneBy(['tag_rfid' => $tagRfid]);
             if ($user) {
                 if($user->getStatus() === 'ACTIVE') {
-                    $transaction = new Transaction();
-                    $transaction->setAmount($amount);
-                    $transaction->setDate(new DateTime());
-                    $transaction->setNumTerminal(1);
-                    $transaction->setUser($user);
-                    $transaction->setAdmin($admin);
+                    $balance = 0;
+                    foreach ($user->getTransactions() as $transaction) {
+                        if($transaction->getStatus() != 'CANCELED')
+                            $balance += $transaction->getAmount();
+                    }
+                    if($balance + $amount >= 0) {
+                        $transaction = new Transaction();
+                        $transaction->setAmount($amount);
+                        $transaction->setDate(new DateTime());
+                        $transaction->setNumTerminal(1);
+                        $transaction->setUser($user);
+                        $transaction->setAdmin($admin);
 
-                    $entityManager->persist($transaction);
-                    $entityManager->flush();
+                        $entityManager->persist($transaction);
+                        $entityManager->flush();
 
-                    $response = new JsonResponse(['code' => 'success', 'message' => "Transaction effctuée avec succès"]);
-                    $response->setStatusCode(Response::HTTP_CREATED);
-                    return $response;
+                        $response = new JsonResponse(['code' => 'success', 'message' => "Transaction effctuée avec succès"]);
+                        $response->setStatusCode(Response::HTTP_CREATED);
+                        return $response;
+                    } else {
+                        $message = "{$user->getFirstname()} {$user->getLastname()} n'a pas assez d'argent";
+                    }
                 } else {
-                    $message = "L'utilisateur avec le tag RFID $tagRfid n'est pas actif";
+                    $message = "{$user->getFirstname()} {$user->getLastname()} n'est pas actif";
                 }
             } else {
                 $message = "L'utilisateur avec le tag RFID $tagRfid est introuvable";

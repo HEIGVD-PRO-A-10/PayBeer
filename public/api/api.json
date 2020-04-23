@@ -105,11 +105,6 @@
                                         "type": "integer",
                                         "default": "1",
                                         "example": "1"
-                                    },
-                                    "admin_id": {
-                                        "description": "Identifiant de l'administrateur ayant effectué la transaction",
-                                        "type": "integer",
-                                        "example": "123"
                                     }
                                 },
                                 "type": "object"
@@ -140,7 +135,7 @@
                 "tags": [
                     "paybeer"
                 ],
-                "summary": "Ajoute un nouvelle utilisateur",
+                "summary": "Ajoute un nouvel utilisateur",
                 "description": "Si le tag RFID existe déjà en base de donnée, dans ce cas l'API renvoie une erreur de type 400",
                 "operationId": "App\\Controller\\Api\\ApiController::newUser",
                 "requestBody": {
