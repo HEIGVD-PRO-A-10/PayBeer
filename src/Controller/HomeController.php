@@ -27,13 +27,11 @@ class HomeController extends AbstractController
         }
         $users = $userRepository->findBy([], ['created_at' => 'DESC']);
         $blockedUsers = $userRepository->findBy(['status' => 'BLOCKED'], ['created_at' => 'DESC']);
-        $overdraftUsers = $userRepository->findAllOverdraft();
         $admins = $adminRepository->findAll();
 
         return $this->render('home.html.twig', [
             'balance' => $balance,
             'blockedUsers' => array_slice($blockedUsers, 0, 10),
-            'overdraftUsers' => array_slice($overdraftUsers, 0, 5),
             'transactions' => array_slice($transactions, 0, 5),
             'lastUsers' => array_slice($users, 0, 5),
             'admins' => $admins,

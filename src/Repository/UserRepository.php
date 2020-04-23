@@ -41,17 +41,4 @@ class UserRepository extends ServiceEntityRepository {
             ->getResult();
     }
 
-    public function findAllOverdraft(): array {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT u.*, SUM(t.amount) AS "balance"
-                FROM transaction t
-                    INNER JOIN user u ON t.user_id = u.id
-                WHERE t.status != \'CANCELED\' OR t.status IS NULL
-                GROUP BY u.id
-                HAVING SUM(t.amount) < 0
-                ORDER BY SUM(t.amount);';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll();
-    }
 }
