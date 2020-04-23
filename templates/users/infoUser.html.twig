@@ -90,7 +90,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for transaction in user.transactions %}
+            {% for transaction in transactions %}
                 <tr class="{{ transaction.status == 'CANCELED' ? 'striked table-warning' }}">
                     <td><a href="{{ path('transaction_info', {id: transaction.id}) }}">{{ transaction.id }}</a></td>
                     <td>{{ transaction.amount }} CHF</td>

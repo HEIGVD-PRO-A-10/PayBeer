@@ -66,13 +66,14 @@ class UsersController extends AbstractController {
      */
     public function info($userID, UserRepository $userRepository, TransactionRepository $transactionRepository) {
         $user = $userRepository->find($userID);
+        $transactions = $transactionRepository->findBy(['user' => $user], ['date' => 'DESC']);
         $balance = 0;
         foreach ($user->getTransactions() as $transaction) {
             if($transaction->getStatus() != 'CANCELED') {
                 $balance += $transaction->getAmount();
             }
         }
-        return $this->render('users/infoUser.html.twig', ['user' => $user, 'balance' => $balance]);
+        return $this->render('users/infoUser.html.twig', ['user' => $user, 'transactions' => $transactions, 'balance' => $balance]);
     }
 
     /**
