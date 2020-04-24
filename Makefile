@@ -49,3 +49,7 @@ api: ## Génére la documentation de l'API
 .PHONY: deploy
 deploy:
 	$(de) php dep deploy
+
+.PHONY: dump-secrets
+dump-secrets:
+	$(sy) secrets:decrypt-to-local --force
