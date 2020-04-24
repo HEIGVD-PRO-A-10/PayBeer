@@ -37,13 +37,13 @@ class ApiController extends AbstractController {
     }
 
     /**
-     * @Route("/login", name="login", methods={"GET"})
+     * @Route("/login", name="login", methods={"POST"})
      * @param Request $request
      * @param UserRepository $userRepository
      * @param AdminRepository $adminRepository
      * @return Response
      *
-     * @OA\Get(
+     * @OA\Post(
      *     path="/login",
      *     summary="Authentification à l'API",
      *     description="Il est nécessaire d'appeler cette route afin de s'authentifier à l'API. Celle-ci renvoie un token JWT en cas de succès. Ce token est valable 1 heure par défaut.",
@@ -78,7 +78,7 @@ class ApiController extends AbstractController {
      * )
      */
     public function login(Request $request, UserRepository $userRepository, AdminRepository $adminRepository): Response {
-        if (($tagRFID = $request->query->get('tag_rfid')) && ($pinNumber = $request->query->get('pin_number'))) {
+        if (($tagRFID = $request->request->get('tag_rfid')) && ($pinNumber = $request->request->get('pin_number'))) {
             $user = $userRepository->findOneBy(['tag_rfid' => $tagRFID]);
             if ($user) {
                 $admin = $adminRepository->find($user->getId());
