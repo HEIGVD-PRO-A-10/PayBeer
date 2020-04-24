@@ -55,6 +55,10 @@ DirectoryIndex index.php
     RewriteRule ^ %{ENV:BASE}/index.php [L]
 </IfModule>
 
+<IfModule mod_headers.c>
+    Header set Connection keep-alive
+</IfModule>
+
 <IfModule !mod_rewrite.c>
     <IfModule mod_alias.c>
         # When mod_rewrite is not available, we instruct a temporary redirect of
