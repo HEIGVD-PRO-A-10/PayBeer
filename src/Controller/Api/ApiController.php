@@ -93,21 +93,15 @@ class ApiController extends AbstractController {
                             ->expiresAt($time + 3600)
                             ->withClaim('admin_id', $admin->getUser()->getId())
                             ->getToken($signer, new Key($_ENV['JWT_SECRET']));
-                        return new JsonResponse(['token' => (string)$token]);
+                        return new JsonResponse(['token' => (string)$token], 200, ['Connection' => 'keep-alive']);
                     } else {
-                        $response = new JsonResponse(['code' => 'error', 'message' => "PIN incorrect"]);
-                        $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-                        return $response;
+                        return new JsonResponse(['code' => 'error', 'message' => "PIN incorrect"], 400, ['Connection' => 'keep-alive']);
                     }
                 }
             }
-            $response = new JsonResponse(['code' => 'error', 'message' => "Utilisateur introuvable"]);
-            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-            return $response;
+            return new JsonResponse(['code' => 'error', 'message' => "Utilisateur introuvable"], 400, ['Connection' => 'keep-alive']);
         } else {
-            $response = new JsonResponse(['code' => 'error', 'message' => "Paramètres incorrectes"]);
-            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-            return $response;
+            return new JsonResponse(['code' => 'error', 'message' => "Paramètres incorrectes"], 400, ['Connection' => 'keep-alive']);
         }
     }
 
@@ -300,7 +294,11 @@ class ApiController extends AbstractController {
                         $message = "{$user->getFirstname()} {$user->getLastname()} n'a pas assez d'argent";
                     }
                 } else {
-                    $message = "{$user->getFirstname()} {$user->getLastname()} n'est pas actif";
+                    if($user->getFirstname() && $user->getLastname()) {
+                        $message = "{$user->getFirstname()} {$user->getLastname()} n'est pas actif";
+                    } else {
+                        $message = "L'utilisateur avec le tag RFID {$tagRfid} n'est pas actif";
+                    }
                 }
             } else {
                 $message = "L'utilisateur avec le tag RFID $tagRfid est introuvable";
