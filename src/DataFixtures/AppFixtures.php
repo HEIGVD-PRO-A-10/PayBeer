@@ -32,7 +32,7 @@ class AppFixtures extends Fixture {
             ["Thomas", "Rieder", "thomas.rieder@heig-vd.ch"],
             ["Nicolas", "Müller", "nicolas.muller1@heig-vd.ch"],
             ["Denis", "Bourqui", "denis.bourqui@heig-vd.ch"],
-            ["Matthias", "Maillard", "matthis.maillard@heig-vd.ch"],
+            ["Mathias", "Maillard", "mathias.maillard@heig-vd.ch"],
         ];
 
         $adminInstances = [];
@@ -47,13 +47,14 @@ class AppFixtures extends Fixture {
             $admin = new Admin();
             $admin->setUser($user);
             $admin->setEmail($userdata[2]);
-            $admin->setPinTerminal((string)$this->faker->randomNumber(5));
+            $admin->setPinTerminal(1111);
             $admin->setPassword($this->passwordEncoder->encodePassword(
                 $admin,
                 '1234'
             ));
 
             $adminInstances[] = $admin;
+            $adminInstances[0]->getUser()->setTagRfid('T4XX2w==');
 
             $manager->persist($user);
             $manager->persist($admin);
