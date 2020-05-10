@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.2"
 services:
   db:
     image: mariadb:latest
@@ -25,11 +25,12 @@ services:
   web:
     image: nginx:latest
     ports:
-      - 8000:80
+      - 8000:443
     volumes:
       - .:/var/www:cached
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:cached
       - ./logs/nginx:/var/log/nginx:delegated
+      - ./certs:/etc/ssl/paybeer
     depends_on:
       - php
   phpmyadmin:
