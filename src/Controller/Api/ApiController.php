@@ -297,19 +297,31 @@ class ApiController extends AbstractController {
                         $response->setStatusCode(Response::HTTP_CREATED);
                         return $response;
                     } else {
-                        $message = "{$user->getFirstname()} {$user->getLastname()} n'a pas assez d'argent";
+                        if($user->getFirstname() && $user->getLastname()) {
+                            $message = "{$user->getFirstname()} {$user->getLastname()} n'a pas assez d'argent";
+                        } else {
+                            $message = "{$user->getTagRfid()} n'a pas assez d'argent";
+                        }
+                        $code = 451;
                     }
                 } else {
-                    $message = "{$user->getFirstname()} {$user->getLastname()} n'est pas actif";
+                    if($user->getFirstname() && $user->getLastname()) {
+                        $message = "{$user->getFirstname()} {$user->getLastname()} n'est pas actif";
+                    } else {
+                        $message = "{$user->getTagRfid()} n'est pas actif";
+                    }
+                    $code = 450;
                 }
             } else {
                 $message = "L'utilisateur avec le tag RFID $tagRfid est introuvable";
+                $code = 450;
             }
         } else {
             $message = "Paramètres incorrectes";
+            $code = 400;
         }
         $response = new JsonResponse(['code' => 'error', 'message' => $message]);
-        $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+        $response->setStatusCode($code);
         return $response;
     }
 }
