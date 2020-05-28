@@ -1,9 +1,23 @@
-PayBeer
-=======
+# PayBeer
 
 Application d'administration pour le système de prépaiement du ChillOut.
 
-# Installation
+Equipe de développement:
+
+| Name                                 | Email                        | Github            |
+|--------------------------------------|------------------------------|-------------------|
+| Gil Balsiger (chef de projet)        | gil.balsiger@heig-vd.ch      | jul0105           |
+| Julien Béguin (chef de projet adj.)  | julien.beguin@heig-vd.ch     | balsigergil       |
+| Denis Bourqui                        | denis.bourqui@heig-vd.ch     | doeni98           |
+| Mathias Maillard                     | mathias.maillard@heig-vd.ch  | mathias-maillard  |
+| Nicolas Müller                       | nicolas.muller1@heig-vd.ch   | Nic0Mueller       |
+| Thomas Rieder                        | thomas.rieder@heig-vd.ch     | thomasrieder      |
+
+## Dépendances 
+
+Docker et docker-compose.
+
+## Installation
 
 Installation de Docker et docker-compose :
 
@@ -61,3 +75,9 @@ Stop les conteneurs :
 make stop
 make clean # Optionnel, supprime les conteneurs
 ```
+
+## Documentation
+
+Voir les documents fournis avec le dossier de rendu :
+ - manuel d'utilisation (web)
+ - documentation technique (web)
