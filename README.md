@@ -1,8 +1,8 @@
-# PayBeer
+# PayBeer - Web
 
 Application d'administration pour le système de prépaiement du ChillOut.
 
-Equipe de développement:
+**Equipe de développement:**
 
 | Name                                 | Email                        | Github            |
 |--------------------------------------|------------------------------|-------------------|
@@ -12,6 +12,8 @@ Equipe de développement:
 | Mathias Maillard                     | mathias.maillard@heig-vd.ch  | mathias-maillard  |
 | Nicolas Müller                       | nicolas.muller1@heig-vd.ch   | Nic0Mueller       |
 | Thomas Rieder                        | thomas.rieder@heig-vd.ch     | thomasrieder      |
+
+[Pour la partie terminal, voir ici](https://github.com/HEIGVD-PRO-A-10/Arduino)
 
 ## Dépendances 
 
