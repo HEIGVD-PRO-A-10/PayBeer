@@ -6,8 +6,8 @@ Application d'administration pour le système de prépaiement du ChillOut.
 
 | Name                                 | Email                        | Github            |
 |--------------------------------------|------------------------------|-------------------|
-| Gil Balsiger (chef de projet)        | gil.balsiger@heig-vd.ch      | jul0105           |
-| Julien Béguin (chef de projet adj.)  | julien.beguin@heig-vd.ch     | balsigergil       |
+| Gil Balsiger (chef de projet)        | gil.balsiger@heig-vd.ch      | balsigergil       |
+| Julien Béguin (chef de projet adj.)  | julien.beguin@heig-vd.ch     | jul0105           |
 | Denis Bourqui                        | denis.bourqui@heig-vd.ch     | doeni98           |
 | Mathias Maillard                     | mathias.maillard@heig-vd.ch  | mathias-maillard  |
 | Nicolas Müller                       | nicolas.muller1@heig-vd.ch   | Nic0Mueller       |
